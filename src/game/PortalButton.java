@@ -5,15 +5,15 @@ import javafx.scene.image.Image;
 /**
  * Created by BurtonGuster on 11/14/16.
  */
-public class Button extends GameElement {
+public class PortalButton extends GameElement {
 
-    private double numPressed;
+    private int numPressed;
 
-    public Button(Image i) {
+    public PortalButton(Image i) {
         super(i);
     }
 
-    public double getNumPressed() {
+    public int getNumPressed() {
         return numPressed;
     }
 
