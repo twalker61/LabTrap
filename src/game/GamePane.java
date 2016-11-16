@@ -8,9 +8,9 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by BurtonGuster on 11/14/16.
+ * Created by twalker61 on 11/14/16.
  */
 public class GamePane extends BorderPane {
 
@@ -40,7 +40,8 @@ public class GamePane extends BorderPane {
     private HBox bottomBar;
     private Button restart;
     private Label statusCheck;
-    private GameScreen screen;
+    private GameScreen gameScreen;
+    private ScrollPane scroller;
 
     private boolean moveUp;
     private boolean moveDown;
@@ -48,14 +49,16 @@ public class GamePane extends BorderPane {
     private boolean moveRight;
 
     public GamePane() {
-        screen = new GameScreen();
+        gameScreen = new GameScreen();
+        scroller = new ScrollPane();
+        scroller.setContent(gameScreen);
 
         elementBar = new VBox(10);
         elements = new ArrayList<>();
         //fill list with thumbnails
         elementBar.getChildren().addAll(elements);
         topBar = new HBox(10);
-        buttonCount = new Label("Buttons Pressed: " + screen.getButtonCount() + "/5");
+        buttonCount = new Label("Buttons Pressed: " + gameScreen.getButtonCount() + "/5");
         timer = new Label();
         timer.textProperty().bind(clock);
         timeline = new Timeline(new KeyFrame(Duration.ZERO, e->{
@@ -67,12 +70,12 @@ public class GamePane extends BorderPane {
         restart = new Button("Restart");
         statusCheck = new Label("");
         bottomBar.getChildren().addAll(restart, statusCheck);
-        screen = new GameScreen();
+        gameScreen = new GameScreen();
 
         setTop(topBar);
         setBottom(bottomBar);
         setLeft(elementBar);
-        setCenter(screen);
+        setCenter(scroller);
 
         addKeyHandler(this);
     }
@@ -110,7 +113,7 @@ public class GamePane extends BorderPane {
         node.setOnKeyPressed(e -> {
             KeyCode k = e.getCode();
             if (k.isArrowKey()) {
-                screen.move(k);
+                gameScreen.move(k);
                 if (k.name().equals("UP")) {
                     moveUp = true;
                 }

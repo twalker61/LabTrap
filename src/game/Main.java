@@ -13,6 +13,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+/**
+ * Created by twalker61
+ */
 public class Main extends Application {
 
     private GamePane root;
@@ -29,9 +32,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+        root = new GamePane();
         //root = new GamePane();
         //layer = (GameScreen) root.getCenter();
-        scroller = new ScrollPane();
+        /*scroller = new ScrollPane();
         background = new HBox();
         background.setMinWidth(1000);
         backgroundImageView = new ImageView( getClass().getResource( "spaceBackground.jpg").toExternalForm());
@@ -72,7 +77,7 @@ public class Main extends Application {
                     moveRight = false;
                 }
             }
-        });
+        });*/
 
         primaryStage.setTitle("Lab Trap!");
         primaryStage.setScene(new Scene(scroller, 300, 275));

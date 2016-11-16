@@ -3,7 +3,7 @@ package game;
 import javafx.scene.image.Image;
 
 /**
- * Created by BurtonGuster on 11/14/16.
+ * Created by twalker61 on 11/14/16.
  */
 public class ExitPortal extends GameElement {
 

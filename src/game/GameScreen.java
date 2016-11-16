@@ -2,20 +2,29 @@ package game;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by BurtonGuster on 11/14/16.
+ * Created by twalker61 on 11/14/16.
  */
-public class GameScreen extends AnchorPane {
+public class GameScreen extends StackPane {
 
+    private HBox backgroundElements;
+    private Pane playerPane;
     private List<PortalButton> buttons;
 
     public GameScreen() {
+        backgroundElements = new HBox();
+        playerPane = new Pane();
+        playerPane.getChildren().add(new Player(new Image("")));
+        getChildren().addAll(backgroundElements, playerPane);
         buttons = new ArrayList<>();
     }
 
