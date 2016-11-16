@@ -7,6 +7,9 @@ import javafx.scene.image.Image;
  */
 public class Player extends GameElement {
 
+    //Point2D object for velocity?
+    //what is imageview.setViewport
+
     boolean canMove;
 
     public Player(Image i) {

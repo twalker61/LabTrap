@@ -1,5 +1,8 @@
 package game;
 
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
@@ -21,5 +24,18 @@ public class GameScreen extends AnchorPane {
             return 0;
         }
         return buttons.get(0).getNumPressed();
+    }
+
+    public void move(KeyCode k) {
+        if (k.name().equals("RIGHT")) {
+            //shift all background elements to the left
+        }
+        if (k.name().equals("UP")) {
+            //make player jump...
+        }
+    }
+
+    public ObservableList<Node> getChildren() {
+        return super.getChildren();
     }
 }

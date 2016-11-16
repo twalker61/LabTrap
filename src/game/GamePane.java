@@ -5,9 +5,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -36,7 +39,13 @@ public class GamePane extends BorderPane {
     private Label buttonCount;
     private HBox bottomBar;
     private Button restart;
+    private Label statusCheck;
     private GameScreen screen;
+
+    private boolean moveUp;
+    private boolean moveDown;
+    private boolean moveLeft;
+    private boolean moveRight;
 
     public GamePane() {
         screen = new GameScreen();
@@ -56,12 +65,66 @@ public class GamePane extends BorderPane {
         topBar.getChildren().addAll(timer, buttonCount);
         bottomBar = new HBox(10);
         restart = new Button("Restart");
-        bottomBar.getChildren().addAll(restart);
+        statusCheck = new Label("");
+        bottomBar.getChildren().addAll(restart, statusCheck);
         screen = new GameScreen();
 
         setTop(topBar);
         setBottom(bottomBar);
         setLeft(elementBar);
         setCenter(screen);
+
+        addKeyHandler(this);
     }
+
+    public boolean isUp() {
+        return moveUp;
+    }
+
+    public boolean isDown() {
+        return moveDown;
+    }
+
+    public boolean isLeft() {
+        return moveLeft;
+    }
+
+    public boolean isRight() {
+        return moveRight;
+    }
+
+    public void setMoveUp(boolean b) {
+        moveUp = b;
+    }
+    public void setMoveDown(boolean b) {
+        moveDown = b;
+    }
+    public void setMoveRight(boolean b) {
+        moveRight = b;
+    }
+    public void setMoveLeft(boolean b) {
+        moveLeft = b;
+    }
+
+    private void addKeyHandler(Node node) {
+        node.setOnKeyPressed(e -> {
+            KeyCode k = e.getCode();
+            if (k.isArrowKey()) {
+                screen.move(k);
+                if (k.name().equals("UP")) {
+                    moveUp = true;
+                }
+                if (k.name().equals("DOWN")) {
+                    moveDown = true;
+                }
+                if (k.name().equals("LEFT")) {
+                    moveLeft = true;
+                }
+                if (k.name().equals("RIGHT")) {
+                    moveRight = true;
+                }
+            }
+        });
+    }
+
 }

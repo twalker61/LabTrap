@@ -3,12 +3,14 @@ package game;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 
 /**
  * Created by BurtonGuster on 11/14/16.
  */
-public abstract class GameElement {
+public abstract class GameElement extends Pane {
 
+    //make each game element a pane?
     private Image img;
     private double positionX;
     private double positionY;
