@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 /**
  * Created by twalker61 on 11/14/16.
  */
-public abstract class GameElement extends Node {
+public abstract class GameElement extends Pane {
 
     //make each game element a pane?
     private Image img;

@@ -1,6 +1,7 @@
 package game;
 
 import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
@@ -53,6 +54,9 @@ public class GamePane extends BorderPane {
         scroller = new ScrollPane();
         scroller.setContent(gameScreen);
 
+        setScrollerEvent();
+        setLoop();
+
         elementBar = new VBox(10);
         elements = new ArrayList<>();
         //fill list with thumbnails
@@ -70,14 +74,13 @@ public class GamePane extends BorderPane {
         restart = new Button("Restart");
         statusCheck = new Label("");
         bottomBar.getChildren().addAll(restart, statusCheck);
-        gameScreen = new GameScreen();
 
         setTop(topBar);
         setBottom(bottomBar);
         setLeft(elementBar);
         setCenter(scroller);
 
-        addKeyHandler(this);
+        //addKeyHandler(this);
     }
 
     public boolean isUp() {
@@ -109,6 +112,44 @@ public class GamePane extends BorderPane {
         moveLeft = b;
     }
 
+    private void setScrollerEvent() {
+        scroller.setOnKeyPressed(e -> {
+            KeyCode k = e.getCode();
+            if (k.isArrowKey()) {
+                if (k.name().equals("UP")) {
+                    moveUp = true;
+                }
+                if (k.name().equals("DOWN")) {
+                    moveDown = true;
+                }
+                if (k.name().equals("LEFT")) {
+                    moveLeft = true;
+                }
+                if (k.name().equals("RIGHT")) {
+                    moveRight = true;
+                }
+            }
+        });
+
+        scroller.setOnKeyReleased(e -> {
+            KeyCode k = e.getCode();
+            if (k.isArrowKey()) {
+                if (k.name().equals("UP")) {
+                    moveUp = false;
+                }
+                if (k.name().equals("DOWN")) {
+                    moveDown = false;
+                }
+                if (k.name().equals("LEFT")) {
+                    moveLeft = false;
+                }
+                if (k.name().equals("RIGHT")) {
+                    moveRight = false;
+                }
+            }
+        });
+    }
+
     private void addKeyHandler(Node node) {
         node.setOnKeyPressed(e -> {
             KeyCode k = e.getCode();
@@ -128,6 +169,48 @@ public class GamePane extends BorderPane {
                 }
             }
         });
+    }
+
+    private void setLoop() {
+        AnimationTimer timer = new AnimationTimer() {
+
+            long lastUpdate = 0 ;
+            double scroll = .5;
+            @Override
+            public void handle(long time) {
+                if (lastUpdate > 0) {
+                    long elapsedNanos = time - lastUpdate ;
+                    double elapsedSeconds = elapsedNanos / 1_000_000_000.0 ;
+                    double vDelta = 0 ;
+                    double hDelta = 0;
+                    if (moveUp) {
+                        vDelta = -scroll * elapsedSeconds ;
+                    }
+                    if (moveDown) {
+                        vDelta = scroll * elapsedSeconds ;
+                    }
+                    if (moveLeft) {
+                        hDelta = -scroll * elapsedSeconds;
+                    }
+                    if (moveRight) {
+                        hDelta = scroll * elapsedSeconds;
+                    }
+                    double newVValue =
+                            clamp(scroller.getVvalue() + vDelta, scroller.getVmin(), scroller.getVmax());
+                    scroller.setVvalue(newVValue);
+                    double newHValue =
+                            clamp(scroller.getHvalue() + hDelta, scroller.getHmin(), scroller.getHmax());
+                    scroller.setHvalue(newHValue);
+                }
+                lastUpdate = time ;
+            }
+        };
+
+        timer.start();
+    }
+
+    private double clamp(double value, double min, double max) {
+        return Math.min(max, Math.max(min, value));
     }
 
 }

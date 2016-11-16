@@ -2,6 +2,7 @@ package game;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
@@ -19,12 +20,18 @@ public class GameScreen extends StackPane {
     private HBox backgroundElements;
     private Pane playerPane;
     private List<PortalButton> buttons;
+    private Label test;
 
     public GameScreen() {
+        test = new Label("GameScreen");
         backgroundElements = new HBox();
         playerPane = new Pane();
-        playerPane.getChildren().add(new Player(new Image("")));
-        getChildren().addAll(backgroundElements, playerPane);
+        playerPane.getChildren().add(new Player(new Image(getClass().getResource( "spaceBackground.jpg").toExternalForm())));
+        //bind gamescreen to size of image
+        //backgroundImageView.fitWidthProperty().bind(layer.widthProperty());
+        //is image loading?
+        //make player image an imageview?
+        getChildren().addAll(backgroundElements, playerPane, test);
         buttons = new ArrayList<>();
     }
 

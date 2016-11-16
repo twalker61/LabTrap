@@ -80,10 +80,11 @@ public class Main extends Application {
         });*/
 
         primaryStage.setTitle("Lab Trap!");
-        primaryStage.setScene(new Scene(scroller, 300, 275));
+        primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
 
-        setLoop();
+        //setLoop();
+        //setLoop();
 
 
 
