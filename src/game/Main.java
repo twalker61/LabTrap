@@ -101,7 +101,7 @@ public class Main extends Application {
         layer.getChildren().add(backgroundImageView);
     }
 
-    private void startGameLoop() {
+    /*private void startGameLoop() {
         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -126,7 +126,7 @@ public class Main extends Application {
         };
 
         gameLoop.start();
-    }
+    }*/
 
     private void setLoop() {
         AnimationTimer timer = new AnimationTimer() {

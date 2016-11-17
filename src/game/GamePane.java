@@ -48,19 +48,20 @@ public class GamePane extends BorderPane {
     private Label statusCheck;
     private GameScreen gameScreen;
     private ScrollPane scroller;
-    private Canvas playerCanvas;
+    private PlayerCanvas playerCanvas;
 
-    private boolean moveUp;
-    private boolean moveDown;
+    //private boolean moveUp;
+    //private boolean moveDown;
     private boolean moveLeft;
     private boolean moveRight;
+    private boolean scrollLock;
 
     public GamePane() {
         layers = new StackPane();
         gameScreen = new GameScreen();
         scroller = new ScrollPane();
         scroller.setContent(gameScreen);
-        playerCanvas = new Canvas(300, 275);
+        playerCanvas = new PlayerCanvas(200, 200);
         playerCanvas.setMouseTransparent(true);
         /*int top = (int)snappedTopInset();
         int right = (int)snappedRightInset();
@@ -73,11 +74,8 @@ public class GamePane extends BorderPane {
         playerCanvas.setWidth(w);
         playerCanvas.setHeight(h);*/
 
-        GraphicsContext gc = playerCanvas.getGraphicsContext2D();
-        gc.setLineWidth(2.0);
-        gc.setFill(Color.RED);
-        gc.fillRoundRect(10, 10, 50, 50, 10, 10);
-
+        scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         setScrollerEvent();
         setLoop();
 
@@ -108,13 +106,13 @@ public class GamePane extends BorderPane {
         //addKeyHandler(this);
     }
 
-    public boolean isUp() {
+    /*public boolean isUp() {
         return moveUp;
     }
 
     public boolean isDown() {
         return moveDown;
-    }
+    }*/
 
     public boolean isLeft() {
         return moveLeft;
@@ -124,12 +122,12 @@ public class GamePane extends BorderPane {
         return moveRight;
     }
 
-    public void setMoveUp(boolean b) {
+    /*public void setMoveUp(boolean b) {
         moveUp = b;
     }
     public void setMoveDown(boolean b) {
         moveDown = b;
-    }
+    }*/
     public void setMoveRight(boolean b) {
         moveRight = b;
     }
@@ -142,10 +140,10 @@ public class GamePane extends BorderPane {
             KeyCode k = e.getCode();
             if (k.isArrowKey()) {
                 if (k.name().equals("UP")) {
-                    moveUp = true;
+                    scrollLock = true;
                 }
                 if (k.name().equals("DOWN")) {
-                    moveDown = true;
+                    scrollLock = true;
                 }
                 if (k.name().equals("LEFT")) {
                     moveLeft = true;
@@ -160,10 +158,10 @@ public class GamePane extends BorderPane {
             KeyCode k = e.getCode();
             if (k.isArrowKey()) {
                 if (k.name().equals("UP")) {
-                    moveUp = false;
+                    scrollLock = false;
                 }
                 if (k.name().equals("DOWN")) {
-                    moveDown = false;
+                    scrollLock = false;
                 }
                 if (k.name().equals("LEFT")) {
                     moveLeft = false;
@@ -175,7 +173,7 @@ public class GamePane extends BorderPane {
         });
     }
 
-    private void addKeyHandler(Node node) {
+    /*private void addKeyHandler(Node node) {
         node.setOnKeyPressed(e -> {
             KeyCode k = e.getCode();
             if (k.isArrowKey()) {
@@ -194,7 +192,7 @@ public class GamePane extends BorderPane {
                 }
             }
         });
-    }
+    }*/
 
     private void setLoop() {
         AnimationTimer timer = new AnimationTimer() {
@@ -206,23 +204,26 @@ public class GamePane extends BorderPane {
                 if (lastUpdate > 0) {
                     long elapsedNanos = time - lastUpdate ;
                     double elapsedSeconds = elapsedNanos / 1_000_000_000.0 ;
-                    double vDelta = 0 ;
+                    //double vDelta = 0 ;
                     double hDelta = 0;
-                    if (moveUp) {
+                    if (scrollLock) {
+                        scroller.setVvalue(0);
+                    }
+                    /*if (moveUp) {
                         vDelta = -scroll * elapsedSeconds ;
                     }
                     if (moveDown) {
                         vDelta = scroll * elapsedSeconds ;
-                    }
+                    }*/
                     if (moveLeft) {
                         hDelta = -scroll * elapsedSeconds;
                     }
                     if (moveRight) {
                         hDelta = scroll * elapsedSeconds;
                     }
-                    double newVValue =
+                    /*double newVValue =
                             clamp(scroller.getVvalue() + vDelta, scroller.getVmin(), scroller.getVmax());
-                    scroller.setVvalue(newVValue);
+                    scroller.setVvalue(newVValue);*/
                     double newHValue =
                             clamp(scroller.getHvalue() + hDelta, scroller.getHmin(), scroller.getHmax());
                     scroller.setHvalue(newHValue);
