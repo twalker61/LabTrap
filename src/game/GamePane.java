@@ -239,4 +239,8 @@ public class GamePane extends BorderPane {
         return Math.min(max, Math.max(min, value));
     }
 
+    public ScrollPane getScroller() {
+        return scroller;
+    }
+
 }
