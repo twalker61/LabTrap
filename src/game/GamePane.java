@@ -55,6 +55,9 @@ public class GamePane extends BorderPane {
     private boolean moveLeft;
     private boolean moveRight;
     private boolean scrollLock;
+    private boolean jump;
+    private boolean duck;
+    private boolean playerDescent;
 
     public GamePane() {
         layers = new StackPane();
@@ -73,6 +76,8 @@ public class GamePane extends BorderPane {
         playerCanvas.setLayoutY(top);
         playerCanvas.setWidth(w);
         playerCanvas.setHeight(h);*/
+
+        setCanvasEvent();
 
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -133,6 +138,30 @@ public class GamePane extends BorderPane {
     }
     public void setMoveLeft(boolean b) {
         moveLeft = b;
+    }
+
+    private void setCanvasEvent() {
+        this.setOnKeyPressed(e -> {
+            KeyCode k = e.getCode();
+            if (k.isArrowKey()) {
+                if (k.name().equals("UP")) {
+                    jump = true;
+                    System.out.println(jump);
+                }
+                if (k.name().equals("DOWN")) {
+                    duck = true;
+                }
+            }
+        });
+
+        this.setOnKeyReleased(e -> {
+            KeyCode k = e.getCode();
+            if (k.isArrowKey()) {
+                if (k.name().equals("DOWN")) {
+                    duck = false;
+                }
+            }
+        });
     }
 
     private void setScrollerEvent() {
@@ -199,6 +228,7 @@ public class GamePane extends BorderPane {
 
             long lastUpdate = 0 ;
             double scroll = .5;
+            double increment = playerCanvas.getJumpMax() / 10;
             @Override
             public void handle(long time) {
                 if (lastUpdate > 0) {
@@ -227,8 +257,23 @@ public class GamePane extends BorderPane {
                     double newHValue =
                             clamp(scroller.getHvalue() + hDelta, scroller.getHmin(), scroller.getHmax());
                     scroller.setHvalue(newHValue);
+
+                    if (jump) {
+                        playerCanvas.clear();
+                        if (playerCanvas.getY() > playerCanvas.getJumpMax() && !playerDescent) {
+                            playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() - increment);
+                        } else {
+                            playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment);
+                            playerDescent = true;
+                        }
+                        if (playerCanvas.getY() >= playerCanvas.getHeight() - playerCanvas.getGroundElevation()) {
+                            jump = false;
+                            playerDescent = false;
+                        }
+                    }
                 }
                 lastUpdate = time ;
+
             }
         };
 
@@ -241,6 +286,9 @@ public class GamePane extends BorderPane {
 
     public ScrollPane getScroller() {
         return scroller;
+    }
+    public Canvas getCanvas() {
+        return playerCanvas;
     }
 
 }
