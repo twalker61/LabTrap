@@ -19,7 +19,7 @@ public class Floor extends GameElement {
     }
 
     @Override
-    public void react(GameElement e) {
+    public void react(Player e) {
         grounded = true;
     }
 }

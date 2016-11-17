@@ -12,9 +12,7 @@ public class Wall extends GameElement {
     }
 
     @Override
-    public void react(GameElement e) {
-        if (e instanceof Player) {
-            ((Player) e).setMobility(false);
-        }
+    public void react(Player e) {
+        e.setMobility(false);
     }
 }

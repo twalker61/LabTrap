@@ -18,7 +18,7 @@ public class PortalButton extends GameElement {
     }
 
     @Override
-    public void react(GameElement g) {
+    public void react(Player g) {
         numPressed++;
         //set actionListener so that when numPressed > x, set ExitPortal to open
     }

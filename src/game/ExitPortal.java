@@ -14,13 +14,11 @@ public class ExitPortal extends GameElement {
     }
 
     @Override
-    public void react(GameElement e) {
+    public void react(Player e) {
         if (open) {
             //prompt end of round
         } else {
-            if (e instanceof Player) {
-                ((Player) e).setMobility(false);
-            }
+           e.setMobility(false);
         }
     }
 }

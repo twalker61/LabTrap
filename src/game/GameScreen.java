@@ -2,12 +2,16 @@ package game;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,23 +19,31 @@ import java.util.List;
 /**
  * Created by twalker61 on 11/14/16.
  */
-public class GameScreen extends StackPane {
+public class GameScreen extends HBox {
 
     private HBox backgroundElements;
-    private Pane playerPane;
+    //private Canvas playerCanvas;
     private List<PortalButton> buttons;
-    private Label test;
 
     public GameScreen() {
-        test = new Label("GameScreen");
         backgroundElements = new HBox();
-        playerPane = new Pane();
-        playerPane.getChildren().add(new Player(new Image(getClass().getResource( "spaceBackground.jpg").toExternalForm())));
+        ImageView img = new ImageView(getClass().getResource("spaceBackground.jpg").toExternalForm());
+        backgroundElements.getChildren().add(img);
+        //backgroundElements.setOpacity(.5);
+        //playerCanvas = new Canvas(400, 400);
+        //playerCanvas.widthProperty().bind(this.widthProperty());
+        //playerCanvas.heightProperty().bind(this.heightProperty());
         //bind gamescreen to size of image
         //backgroundImageView.fitWidthProperty().bind(layer.widthProperty());
         //is image loading?
         //make player image an imageview?
-        getChildren().addAll(backgroundElements, playerPane, test);
+        /*GraphicsContext gc = playerCanvas.getGraphicsContext2D();
+        gc.setLineWidth(2.0);
+        gc.setFill(Color.RED);
+        gc.fillRoundRect(10, 10, 50, 50, 10, 10);*/
+
+        getChildren().addAll(backgroundElements);
+        //getChildren().add(playerCanvas);
         buttons = new ArrayList<>();
     }
 

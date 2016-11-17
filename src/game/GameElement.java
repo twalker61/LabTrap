@@ -32,9 +32,9 @@ public abstract class GameElement extends Pane {
         positionY = y;
     }
 
-    public Rectangle2D getBoundary() {
+    /*public Rectangle2D getBoundary() {
         return new Rectangle2D(positionX, positionY, width, height);
-    }
+    }*/
 
     public void shift(double x, double y) {
         positionX += x;
@@ -45,9 +45,9 @@ public abstract class GameElement extends Pane {
         gc.drawImage(img, positionX, positionY);
     }
 
-    public boolean collision(GameElement g) {
-        return getBoundary().intersects(g.getBoundary());
+    public boolean collision(Player g) {
+        return this.intersects(g.getBoundary());
     }
 
-    public abstract void react(GameElement g);
+    public abstract void react(Player g);
 }

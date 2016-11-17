@@ -7,6 +7,8 @@ import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -14,7 +16,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 //import java.util.Duration;
@@ -29,11 +33,12 @@ import java.util.List;
  */
 public class GamePane extends BorderPane {
 
+    private StackPane layers;
     private VBox elementBar;
     private List<ImageView> elements;
     private HBox topBar;
     private Label timer;
-    private final StringProperty clock = new SimpleStringProperty("00:00:00");
+    private StringProperty clock = new SimpleStringProperty("00:00:00");
     private Timeline timeline;
     private LocalTime time;
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault());
@@ -43,6 +48,7 @@ public class GamePane extends BorderPane {
     private Label statusCheck;
     private GameScreen gameScreen;
     private ScrollPane scroller;
+    private Canvas playerCanvas;
 
     private boolean moveUp;
     private boolean moveDown;
@@ -50,9 +56,27 @@ public class GamePane extends BorderPane {
     private boolean moveRight;
 
     public GamePane() {
+        layers = new StackPane();
         gameScreen = new GameScreen();
         scroller = new ScrollPane();
         scroller.setContent(gameScreen);
+        playerCanvas = new Canvas(300, 275);
+        playerCanvas.setMouseTransparent(true);
+        /*int top = (int)snappedTopInset();
+        int right = (int)snappedRightInset();
+        int bottom = (int)snappedBottomInset();
+        int left = (int)snappedLeftInset();
+        int w = (int)getWidth() - left - right;
+        int h = (int)getHeight() - top - bottom;
+        playerCanvas.setLayoutX(left);
+        playerCanvas.setLayoutY(top);
+        playerCanvas.setWidth(w);
+        playerCanvas.setHeight(h);*/
+
+        GraphicsContext gc = playerCanvas.getGraphicsContext2D();
+        gc.setLineWidth(2.0);
+        gc.setFill(Color.RED);
+        gc.fillRoundRect(10, 10, 50, 50, 10, 10);
 
         setScrollerEvent();
         setLoop();
@@ -78,7 +102,8 @@ public class GamePane extends BorderPane {
         setTop(topBar);
         setBottom(bottomBar);
         setLeft(elementBar);
-        setCenter(scroller);
+        layers.getChildren().addAll(scroller, playerCanvas);
+        setCenter(layers);
 
         //addKeyHandler(this);
     }
