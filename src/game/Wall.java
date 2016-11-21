@@ -11,8 +11,8 @@ public class Wall extends GameElement {
         super(i);
     }
 
-    @Override
+    /*@Override
     public void react(Player e) {
         e.setMobility(false);
-    }
+    }*/
 }

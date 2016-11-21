@@ -13,12 +13,12 @@ public class ExitPortal extends GameElement {
         super(i);
     }
 
-    @Override
+    /*@Override
     public void react(Player e) {
         if (open) {
             //prompt end of round
         } else {
            e.setMobility(false);
         }
-    }
+    }*/
 }

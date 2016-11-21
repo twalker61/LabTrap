@@ -1,5 +1,6 @@
 package game;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -24,11 +25,11 @@ public class PlayerCanvas extends Canvas {
         super(width, height);
         playerHeight = 20;
         groundElevation = playerHeight + 10;
-        startX = getWidth()/2 - playerHeight;
+        startX = 0;
         startY = getHeight() - groundElevation;
         currentX = startX;
         currentY = startY;
-        jumpMax = startX - 30;
+        jumpMax = startY - 40;
         gc = this.getGraphicsContext2D();
         gc.setLineWidth(2.0);
         gc.setFill(Color.RED);
@@ -51,6 +52,14 @@ public class PlayerCanvas extends Canvas {
 
     public double getY() {
         return currentY;
+    }
+
+    public double getCenterX() {
+        return currentX + playerHeight/2;
+    }
+
+    public Rectangle2D getBoundary() {
+        return new Rectangle2D(currentX, currentY, playerHeight, playerHeight);
     }
 
     public double getJumpMax() {

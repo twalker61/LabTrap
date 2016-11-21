@@ -21,14 +21,16 @@ import java.util.List;
  */
 public class GameScreen extends HBox {
 
-    private HBox backgroundElements;
+    //private HBox backgroundElements;
     //private Canvas playerCanvas;
     private List<PortalButton> buttons;
+    private List<Floor> floorTiles;
+    private List<Wall> walls;
 
     public GameScreen() {
-        backgroundElements = new HBox();
+        //backgroundElements = new HBox();
         ImageView img = new ImageView(getClass().getResource("spaceBackground.jpg").toExternalForm());
-        backgroundElements.getChildren().add(img);
+        this.getChildren().add(img);
         //backgroundElements.setOpacity(.5);
         //playerCanvas = new Canvas(400, 400);
         //playerCanvas.widthProperty().bind(this.widthProperty());
@@ -42,9 +44,11 @@ public class GameScreen extends HBox {
         gc.setFill(Color.RED);
         gc.fillRoundRect(10, 10, 50, 50, 10, 10);*/
 
-        getChildren().addAll(backgroundElements);
+        //getChildren().addAll(backgroundElements);
         //getChildren().add(playerCanvas);
         buttons = new ArrayList<>();
+        floorTiles = new ArrayList<>();
+        walls = new ArrayList<>();
     }
 
     public int getButtonCount() {
@@ -54,16 +58,26 @@ public class GameScreen extends HBox {
         return buttons.get(0).getNumPressed();
     }
 
-    public void move(KeyCode k) {
+    public List<PortalButton> getButtons() {
+        return buttons;
+    }
+    public List<Floor> getFloors() {
+        return floorTiles;
+    }
+    public List<Wall> getWalls() {
+        return walls;
+    }
+
+    /*public void move(KeyCode k) {
         if (k.name().equals("RIGHT")) {
             //shift all background elements to the left
         }
         if (k.name().equals("UP")) {
             //make player jump...
         }
-    }
+    }*/
 
-    public ObservableList<Node> getChildren() {
+    /*public ObservableList<Node> getChildren() {
         return super.getChildren();
-    }
+    }*/
 }

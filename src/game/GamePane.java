@@ -77,12 +77,14 @@ public class GamePane extends BorderPane {
         playerCanvas.setWidth(w);
         playerCanvas.setHeight(h);*/
 
-        setCanvasEvent();
+        //setCanvasEvent();
 
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        setScrollerEvent();
+        //setScrollerEvent();
         setLoop();
+
+        setKeyEvents();
 
         elementBar = new VBox(10);
         elements = new ArrayList<>();
@@ -90,12 +92,15 @@ public class GamePane extends BorderPane {
         elementBar.getChildren().addAll(elements);
         topBar = new HBox(10);
         buttonCount = new Label("Buttons Pressed: " + gameScreen.getButtonCount() + "/5");
+
+        time = LocalTime.now();
         timer = new Label();
         timer.textProperty().bind(clock);
         timeline = new Timeline(new KeyFrame(Duration.ZERO, e->{
             clock.set(LocalTime.now().minusNanos(time.toNanoOfDay()).format(fmt));
         }),new KeyFrame(Duration.seconds(1)));
-        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
         topBar.getChildren().addAll(timer, buttonCount);
         bottomBar = new HBox(10);
         restart = new Button("Restart");
@@ -133,11 +138,52 @@ public class GamePane extends BorderPane {
     public void setMoveDown(boolean b) {
         moveDown = b;
     }*/
-    public void setMoveRight(boolean b) {
+    /*public void setMoveRight(boolean b) {
         moveRight = b;
     }
     public void setMoveLeft(boolean b) {
         moveLeft = b;
+    }*/
+
+    private void setKeyEvents() {
+        this.setOnKeyPressed(e -> {
+            KeyCode k = e.getCode();
+            if (k.isArrowKey()) {
+                if (k.name().equals("UP")) {
+                    scrollLock = true;
+                    jump = true;
+                }
+                if (k.name().equals("DOWN")) {
+                    scrollLock = true;
+                    duck = true;
+                }
+                if (k.name().equals("LEFT")) {
+                    moveLeft = true;
+                }
+                if (k.name().equals("RIGHT")) {
+                    moveRight = true;
+                }
+            }
+        });
+
+        this.setOnKeyReleased(e -> {
+            KeyCode k = e.getCode();
+            if (k.isArrowKey()) {
+                if (k.name().equals("UP")) {
+                    scrollLock = false;
+                }
+                if (k.name().equals("DOWN")) {
+                    scrollLock = false;
+                    duck = false;
+                }
+                if (k.name().equals("LEFT")) {
+                    moveLeft = false;
+                }
+                if (k.name().equals("RIGHT")) {
+                    moveRight = false;
+                }
+            }
+        });
     }
 
     private void setCanvasEvent() {
@@ -146,7 +192,6 @@ public class GamePane extends BorderPane {
             if (k.isArrowKey()) {
                 if (k.name().equals("UP")) {
                     jump = true;
-                    System.out.println(jump);
                 }
                 if (k.name().equals("DOWN")) {
                     duck = true;
@@ -228,52 +273,81 @@ public class GamePane extends BorderPane {
 
             long lastUpdate = 0 ;
             double scroll = .5;
-            double increment = playerCanvas.getJumpMax() / 10;
+            double increment = playerCanvas.getJumpMax() /50;
+            double vVal = scroller.getVvalue();
             @Override
             public void handle(long time) {
+                boolean grounded = false;
+                boolean rightBlocked = false;
+                boolean leftBlocked = false;
+                boolean hitButton = false;
+
+                for (Floor f : gameScreen.getFloors()) {
+                    if (f.collision(playerCanvas)) {
+                        grounded = true;
+                    }
+                }
+                for (Wall w : gameScreen.getWalls()) {
+                    if (w.collision(playerCanvas)) {
+                        if (w.getCenterX() > playerCanvas.getCenterX()) {
+                            rightBlocked = true;
+                        } else {
+                            leftBlocked = true;
+                        }
+                    }
+                }
+                for (PortalButton b : gameScreen.getButtons()) {
+                    if (b.collision(playerCanvas)) {
+                        hitButton = true;
+                    }
+                }
+
+                //if playerCanvas and game elements intersecting, react.
+                //otherwise, do this normal position update
                 if (lastUpdate > 0) {
-                    long elapsedNanos = time - lastUpdate ;
-                    double elapsedSeconds = elapsedNanos / 1_000_000_000.0 ;
+                    long elapsedNanos = time - lastUpdate;
+                    double elapsedSeconds = elapsedNanos / 1_000_000_000.0;
                     //double vDelta = 0 ;
                     double hDelta = 0;
                     if (scrollLock) {
-                        scroller.setVvalue(0);
-                    }
-                    /*if (moveUp) {
-                        vDelta = -scroll * elapsedSeconds ;
-                    }
-                    if (moveDown) {
-                        vDelta = scroll * elapsedSeconds ;
-                    }*/
-                    if (moveLeft) {
+                        scroller.setVvalue(vVal);
+                    }/*if (moveUp) {
+                       vDelta = -scroll * elapsedSeconds ;
+                   }
+                   if (moveDown) {
+                       vDelta = scroll * elapsedSeconds ;
+                   }*/
+                    if (moveLeft && !leftBlocked) {
                         hDelta = -scroll * elapsedSeconds;
                     }
-                    if (moveRight) {
+                    if (moveRight && !rightBlocked) {
                         hDelta = scroll * elapsedSeconds;
-                    }
-                    /*double newVValue =
-                            clamp(scroller.getVvalue() + vDelta, scroller.getVmin(), scroller.getVmax());
-                    scroller.setVvalue(newVValue);*/
+                    }/*double newVValue =
+                           clamp(scroller.getVvalue() + vDelta, scroller.getVmin(), scroller.getVmax());
+                   scroller.setVvalue(newVValue);*/
                     double newHValue =
                             clamp(scroller.getHvalue() + hDelta, scroller.getHmin(), scroller.getHmax());
-                    scroller.setHvalue(newHValue);
+                        scroller.setHvalue(newHValue);
 
                     if (jump) {
                         playerCanvas.clear();
-                        if (playerCanvas.getY() > playerCanvas.getJumpMax() && !playerDescent) {
+                        if (hitButton) {
+                            playerDescent = true;
+                        }
+                        if (playerCanvas.getY() > (playerCanvas.getJumpMax()) && !playerDescent) {
                             playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() - increment);
                         } else {
                             playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment);
                             playerDescent = true;
                         }
-                        if (playerCanvas.getY() >= playerCanvas.getHeight() - playerCanvas.getGroundElevation()) {
+                        if (grounded) {
+                            // previous 'if' logic: playerCanvas.getY() >= playerCanvas.getHeight() - playerCanvas.getGroundElevation()
                             jump = false;
                             playerDescent = false;
                         }
                     }
                 }
-                lastUpdate = time ;
-
+                lastUpdate = time;
             }
         };
 
