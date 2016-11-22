@@ -4,6 +4,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 /**
@@ -11,7 +12,8 @@ import javafx.scene.paint.Color;
  */
 public class PlayerCanvas extends Canvas {
 
-    private Image player;
+    private Image playerForward;
+    private Image playerBackward;
     private double groundElevation;
     private double playerHeight;
     private double startX;
@@ -20,31 +22,45 @@ public class PlayerCanvas extends Canvas {
     private double currentY;
     private double jumpMax;
     private GraphicsContext gc;
+    private boolean forward;
 
     public PlayerCanvas(double width, double height) {
         super(width, height);
         playerHeight = 20;
-        groundElevation = playerHeight + 10;
+        groundElevation = playerHeight + 20;
         startX = 0;
         startY = getHeight() - groundElevation;
         currentX = startX;
         currentY = startY;
-        jumpMax = startY - 40;
-        /*gc = this.getGraphicsContext2D();
-        gc.setLineWidth(2.0);
+        jumpMax = startY - 70;
+        gc = this.getGraphicsContext2D();
+        /*gc.setLineWidth(2.0);
         gc.setFill(Color.RED);
         gc.fillOval(startX, startY, playerHeight, playerHeight);*/
-        player = new Image(getClass().getResource("labtrapRat.png").toExternalForm());
-        gc.drawImage(player, startX, startY);
+        playerForward = new Image(getClass().getResource("labtrapRat.png").toExternalForm());
+        playerBackward = new Image(getClass().getResource("labtrapRatFlipped.png").toExternalForm());
+        gc.drawImage(playerForward, startX, startY);
     }
 
     public double getGroundElevation() {
         return groundElevation;
     }
 
-    public void draw(double x, double y) {
+    public void draw(double x, double y, int direction) {
         //gc.fillOval(x, y, playerHeight, playerHeight);
-        gc.drawImage(player, x, y);
+        if (direction > 0) {
+            forward = true;
+        }
+        if (direction < 0) {
+            forward = false;
+        }
+        if (x > currentX || forward) {
+            gc.drawImage(playerForward, x, y);
+            forward = true;
+        } else {
+            gc.drawImage(playerBackward, x ,y);
+        }
+
         currentX = x;
         currentY = y;
     }
@@ -66,11 +82,11 @@ public class PlayerCanvas extends Canvas {
     }
 
     public double getCenterX() {
-        return currentX + player.getWidth()/2.0;
+        return currentX + playerForward.getWidth()/2.0;
     }
 
     public Rectangle2D getBoundary() {
-        return new Rectangle2D(currentX, currentY, player.getWidth(), player.getHeight());
+        return new Rectangle2D(currentX, currentY, playerForward.getWidth(), playerForward.getHeight());
     }
 
     public double getJumpMax() {

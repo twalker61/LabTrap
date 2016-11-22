@@ -325,17 +325,22 @@ public class GamePane extends BorderPane {
                     }/*double newVValue =
                            clamp(scroller.getVvalue() + vDelta, scroller.getVmin(), scroller.getVmax());
                    scroller.setVvalue(newVValue);*/
+                    int direction = (int)(hDelta * 1000);
+                    //System.out.println("Forward: " + forward);
+                    playerCanvas.clear();
+                    playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY(), direction);
+
                     double newHValue =
                             clamp(scroller.getHvalue() + hDelta, scroller.getHmin(), scroller.getHmax());
                     if (playerCanvas.getX() > playerCanvas.getStartX()) {
                         playerCanvas.clear();
-                        playerCanvas.draw(playerCanvas.getX() + hDelta * 1000, playerCanvas.getY());
+                        playerCanvas.draw(playerCanvas.getX() + hDelta * 1000, playerCanvas.getY(), direction);
                     } else {
                         scroller.setHvalue(newHValue);
                     }
                     if (newHValue == scroller.getHmax() && moveRight) {
                         playerCanvas.clear();
-                        playerCanvas.draw(playerCanvas.getX() + hDelta * 1000, playerCanvas.getY());
+                        playerCanvas.draw(playerCanvas.getX() + hDelta * 1000, playerCanvas.getY(), direction);
                     }
                     //System.out.println(playerCanvas.getX());
 
@@ -345,9 +350,9 @@ public class GamePane extends BorderPane {
                             playerDescent = true;
                         }
                         if (playerCanvas.getY() > (playerCanvas.getJumpMax()) && !playerDescent) {
-                            playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() - increment);
+                            playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() - increment, direction);
                         } else {
-                            playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment);
+                            playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment, direction);
                             playerDescent = true;
                         }
                         if (grounded) {
