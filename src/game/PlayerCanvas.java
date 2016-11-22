@@ -40,6 +40,7 @@ public class PlayerCanvas extends Canvas {
         playerForward = new Image(getClass().getResource("labtrapRat.png").toExternalForm());
         playerBackward = new Image(getClass().getResource("labtrapRatFlipped.png").toExternalForm());
         gc.drawImage(playerForward, startX, startY);
+        forward = true;
     }
 
     public double getGroundElevation() {

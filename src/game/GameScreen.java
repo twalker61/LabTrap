@@ -36,7 +36,8 @@ public class GameScreen extends HBox {
         this.setStyle("-fx-background-image: url('" + image + "'); " +
                 "-fx-background-position: center center; " +
                 "-fx-background-repeat: stretch;");*/
-        ImageView img = new ImageView(getClass().getResource("spaceBackground.jpg").toExternalForm());
+        ImageView img = new ImageView(getClass().getResource("labtrapBackground.png").toExternalForm());
+        //img.fitHeightProperty().bind(this.heightProperty());
         this.getChildren().add(img);
 
         buttons = new ArrayList<>();
