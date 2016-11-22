@@ -64,7 +64,7 @@ public class GamePane extends BorderPane {
         gameScreen = new GameScreen();
         scroller = new ScrollPane();
         scroller.setContent(gameScreen);
-        playerCanvas = new PlayerCanvas(200, 200);
+        playerCanvas = new PlayerCanvas(550, 550);
         playerCanvas.setMouseTransparent(true);
         /*int top = (int)snappedTopInset();
         int right = (int)snappedRightInset();

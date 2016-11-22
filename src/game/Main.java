@@ -80,7 +80,7 @@ public class Main extends Application {
         });*/
 
         primaryStage.setTitle("Lab Trap!");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        primaryStage.setScene(new Scene(root, 600, 600));
         primaryStage.show();
 
         root.getCanvas().requestFocus();
