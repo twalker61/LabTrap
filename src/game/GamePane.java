@@ -272,7 +272,7 @@ public class GamePane extends BorderPane {
         AnimationTimer timer = new AnimationTimer() {
 
             long lastUpdate = 0 ;
-            double scroll = .5;
+            double scroll = .2;
             double increment = playerCanvas.getJumpMax() /50;
             double vVal = scroller.getVvalue();
             @Override
@@ -327,7 +327,17 @@ public class GamePane extends BorderPane {
                    scroller.setVvalue(newVValue);*/
                     double newHValue =
                             clamp(scroller.getHvalue() + hDelta, scroller.getHmin(), scroller.getHmax());
+                    if (playerCanvas.getX() > playerCanvas.getStartX()) {
+                        playerCanvas.clear();
+                        playerCanvas.draw(playerCanvas.getX() + hDelta * 1000, playerCanvas.getY());
+                    } else {
                         scroller.setHvalue(newHValue);
+                    }
+                    if (newHValue == scroller.getHmax() && moveRight) {
+                        playerCanvas.clear();
+                        playerCanvas.draw(playerCanvas.getX() + hDelta * 1000, playerCanvas.getY());
+                    }
+                    //System.out.println(playerCanvas.getX());
 
                     if (jump) {
                         playerCanvas.clear();

@@ -46,6 +46,14 @@ public class PlayerCanvas extends Canvas {
         currentY = y;
     }
 
+    public double getStartX() {
+        return startX;
+    }
+
+    public double getStartY() {
+        return startY;
+    }
+
     public double getX() {
         return currentX;
     }
