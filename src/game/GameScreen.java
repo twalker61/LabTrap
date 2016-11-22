@@ -8,9 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -29,23 +27,18 @@ public class GameScreen extends HBox {
 
     public GameScreen() {
         //backgroundElements = new HBox();
+        /*Image background = new Image(getClass().getResource("spaceBackground.jpg").toExternalForm());
+        BackgroundImage myBI= new BackgroundImage(background,
+                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT);
+        this.setBackground(new Background(myBI));*/
+        /*String image = getClass().getResource("spaceBackground.jpg").toExternalForm();
+        this.setStyle("-fx-background-image: url('" + image + "'); " +
+                "-fx-background-position: center center; " +
+                "-fx-background-repeat: stretch;");*/
         ImageView img = new ImageView(getClass().getResource("spaceBackground.jpg").toExternalForm());
         this.getChildren().add(img);
-        //backgroundElements.setOpacity(.5);
-        //playerCanvas = new Canvas(400, 400);
-        //playerCanvas.widthProperty().bind(this.widthProperty());
-        //playerCanvas.heightProperty().bind(this.heightProperty());
-        //bind gamescreen to size of image
-        //backgroundImageView.fitWidthProperty().bind(layer.widthProperty());
-        //is image loading?
-        //make player image an imageview?
-        /*GraphicsContext gc = playerCanvas.getGraphicsContext2D();
-        gc.setLineWidth(2.0);
-        gc.setFill(Color.RED);
-        gc.fillRoundRect(10, 10, 50, 50, 10, 10);*/
 
-        //getChildren().addAll(backgroundElements);
-        //getChildren().add(playerCanvas);
         buttons = new ArrayList<>();
         floorTiles = new ArrayList<>();
         walls = new ArrayList<>();

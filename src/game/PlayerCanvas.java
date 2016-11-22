@@ -30,10 +30,12 @@ public class PlayerCanvas extends Canvas {
         currentX = startX;
         currentY = startY;
         jumpMax = startY - 40;
-        gc = this.getGraphicsContext2D();
+        /*gc = this.getGraphicsContext2D();
         gc.setLineWidth(2.0);
         gc.setFill(Color.RED);
-        gc.fillOval(startX, startY, playerHeight, playerHeight);
+        gc.fillOval(startX, startY, playerHeight, playerHeight);*/
+        player = new Image(getClass().getResource("labtrapRat.png").toExternalForm());
+        gc.drawImage(player, startX, startY);
     }
 
     public double getGroundElevation() {
@@ -41,7 +43,8 @@ public class PlayerCanvas extends Canvas {
     }
 
     public void draw(double x, double y) {
-        gc.fillOval(x, y, playerHeight, playerHeight);
+        //gc.fillOval(x, y, playerHeight, playerHeight);
+        gc.drawImage(player, x, y);
         currentX = x;
         currentY = y;
     }
@@ -63,11 +66,11 @@ public class PlayerCanvas extends Canvas {
     }
 
     public double getCenterX() {
-        return currentX + playerHeight/2;
+        return currentX + player.getWidth()/2.0;
     }
 
     public Rectangle2D getBoundary() {
-        return new Rectangle2D(currentX, currentY, playerHeight, playerHeight);
+        return new Rectangle2D(currentX, currentY, player.getWidth(), player.getHeight());
     }
 
     public double getJumpMax() {
