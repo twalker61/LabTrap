@@ -18,7 +18,10 @@ public abstract class GameElement extends Pane {
     private double width;
     private double height;
 
-    public GameElement(Image i) {
+    public GameElement() {
+    }
+
+    public void setImage(Image i) {
         img = i;
         width = i.getWidth();
         height = i.getHeight();

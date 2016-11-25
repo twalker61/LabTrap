@@ -9,8 +9,9 @@ public class Floor extends GameElement {
 
     private boolean grounded;
 
-    public Floor(Image i) {
-        super(i);
+    public Floor() {
+        super();
+        super.setImage(new Image(getClass().getResource("floor.png").toExternalForm()));
         grounded = true;
     }
 

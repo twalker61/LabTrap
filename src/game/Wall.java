@@ -8,7 +8,8 @@ import javafx.scene.image.Image;
 public class Wall extends GameElement {
 
     public Wall(Image i) {
-        super(i);
+        super();
+        super.setImage(new Image(getClass().getResource("wall.png").toExternalForm()));
     }
 
     /*@Override
