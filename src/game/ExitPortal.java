@@ -9,16 +9,8 @@ public class ExitPortal extends GameElement {
 
     private boolean open;
 
-    public ExitPortal(Image i) {
-        super(i);
+    public ExitPortal() {
+        super();
     }
 
-    /*@Override
-    public void react(Player e) {
-        if (open) {
-            //prompt end of round
-        } else {
-           e.setMobility(false);
-        }
-    }*/
 }

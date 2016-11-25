@@ -11,7 +11,7 @@ public class Floor extends GameElement {
 
     public Floor() {
         super();
-        super.setImage(new Image(getClass().getResource("floor.png").toExternalForm()));
+        super.setImage(new Image(getClass().getResource("../images/floor.png").toExternalForm()));
         grounded = true;
     }
 
@@ -19,8 +19,4 @@ public class Floor extends GameElement {
         grounded = g;
     }
 
-    /*@Override
-    public void react(PlayerCanvas e) {
-        grounded = true;
-    }*/
 }

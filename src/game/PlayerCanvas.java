@@ -15,7 +15,6 @@ public class PlayerCanvas extends Canvas {
     private Image playerForward;
     private Image playerBackward;
     private double groundElevation;
-    private double playerHeight;
     private double startX;
     private double startY;
     private double currentX;
@@ -26,19 +25,15 @@ public class PlayerCanvas extends Canvas {
 
     public PlayerCanvas(double width, double height) {
         super(width, height);
-        playerHeight = 20;
-        groundElevation = playerHeight + 20;
+        groundElevation = 80;
         startX = 0;
         startY = getHeight() - groundElevation;
         currentX = startX;
         currentY = startY;
-        jumpMax = startY - 70;
+        jumpMax = 85;
         gc = this.getGraphicsContext2D();
-        /*gc.setLineWidth(2.0);
-        gc.setFill(Color.RED);
-        gc.fillOval(startX, startY, playerHeight, playerHeight);*/
-        playerForward = new Image(getClass().getResource("labtrapRat.png").toExternalForm());
-        playerBackward = new Image(getClass().getResource("labtrapRatFlipped.png").toExternalForm());
+        playerForward = new Image(getClass().getResource("../images/labtrapRat.png").toExternalForm());
+        playerBackward = new Image(getClass().getResource("../images/labtrapRatFlipped.png").toExternalForm());
         gc.drawImage(playerForward, startX, startY);
         forward = true;
     }
@@ -48,7 +43,6 @@ public class PlayerCanvas extends Canvas {
     }
 
     public void draw(double x, double y, int direction) {
-        //gc.fillOval(x, y, playerHeight, playerHeight);
         if (direction > 0) {
             forward = true;
         }

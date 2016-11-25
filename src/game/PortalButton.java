@@ -9,17 +9,11 @@ public class PortalButton extends GameElement {
 
     private int numPressed;
 
-    public PortalButton(Image i) {
-        super(i);
+    public PortalButton() {
+        super();
     }
 
     public int getNumPressed() {
         return numPressed;
     }
-
-    /*@Override
-    public void react(Player g) {
-        numPressed++;
-        //set actionListener so that when numPressed > x, set ExitPortal to open
-    }*/
 }

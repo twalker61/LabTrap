@@ -7,13 +7,8 @@ import javafx.scene.image.Image;
  */
 public class Wall extends GameElement {
 
-    public Wall(Image i) {
+    public Wall() {
         super();
-        super.setImage(new Image(getClass().getResource("wall.png").toExternalForm()));
+        super.setImage(new Image(getClass().getResource("../images/wallFull.png").toExternalForm()));
     }
-
-    /*@Override
-    public void react(Player e) {
-        e.setMobility(false);
-    }*/
 }
