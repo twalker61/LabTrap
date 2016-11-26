@@ -57,7 +57,7 @@ public class GameElement extends Pane {
     public boolean collision(PlayerCanvas g) {
         //System.out.println("In method");
 
-        System.out.println("Floor Min y: " + this.getBoundary().getMinY());
+        /*System.out.println("Floor Min y: " + this.getBoundary().getMinY());
         System.out.println("Floor Max y: " + this.getBoundary().getMaxY());
         System.out.println("Rat Min y: " + g.getBoundary().getMinY());
         System.out.println("Rat Max y: " + g.getBoundary().getMaxY());
@@ -66,7 +66,7 @@ public class GameElement extends Pane {
         System.out.println("Floor Max x: " + this.getBoundary().getMaxX());
         System.out.println("Rat Min x: " + g.getBoundary().getMinX());
         System.out.println("Rat Max x: " + g.getBoundary().getMaxX());
-        System.out.println(this.getBoundary().intersects(g.getBoundary()));
+        System.out.println(this.getBoundary().intersects(g.getBoundary()));*/
 
         return this.getBoundary().intersects(g.getBoundary());
     }

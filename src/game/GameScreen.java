@@ -70,6 +70,10 @@ public class GameScreen extends StackPane {
         walls.add(w);
     }
 
+    public ImageView getBackgroundImage() {
+        return (ImageView) background.getChildren().get(0);
+    }
+
     public int getButtonCount() {
         if (buttons.size() == 0) {
             return 0;

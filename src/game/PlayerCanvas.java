@@ -3,6 +3,7 @@ package game;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -22,8 +23,9 @@ public class PlayerCanvas extends Canvas {
     private double jumpMax;
     private GraphicsContext gc;
     private boolean forward;
+    private ScrollPane scroll;
 
-    public PlayerCanvas(double width, double height) {
+    public PlayerCanvas(double width, double height, ScrollPane s) {
         super(width, height);
         groundElevation = 80;
         startX = 0;
@@ -36,6 +38,7 @@ public class PlayerCanvas extends Canvas {
         playerBackward = new Image(getClass().getResource("../images/labtrapRatFlipped.png").toExternalForm());
         gc.drawImage(playerForward, startX, startY);
         forward = true;
+        scroll = s;
     }
 
     public double getGroundElevation() {
@@ -81,7 +84,7 @@ public class PlayerCanvas extends Canvas {
     }
 
     public Rectangle2D getBoundary() {
-        return new Rectangle2D(currentX, currentY, playerForward.getWidth(), playerForward.getHeight());
+        return new Rectangle2D(currentX + scroll.getHvalue() * ((GameScreen)(scroll.getContent())).getBackgroundImage().getImage().getWidth() * .75, currentY, playerForward.getWidth(), playerForward.getHeight());
     }
 
     public double getJumpMax() {

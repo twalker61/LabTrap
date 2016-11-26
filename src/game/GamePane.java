@@ -65,7 +65,7 @@ public class GamePane extends BorderPane {
         gameScreen = new GameScreen();
         scroller = new ScrollPane();
         scroller.setContent(gameScreen);
-        playerCanvas = new PlayerCanvas(550, 550);
+        playerCanvas = new PlayerCanvas(550, 550, scroller);
         playerCanvas.setMouseTransparent(true);
 
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -166,7 +166,12 @@ public class GamePane extends BorderPane {
                     }
                 }
                 for (Wall w : gameScreen.getWalls()) {
+                    System.out.println("Floor Min x: " + w.getBoundary().getMinX());
+                    System.out.println("Floor Max x: " + w.getBoundary().getMaxX());
+                    System.out.println("Rat Min x: " + playerCanvas.getBoundary().getMinX());
+                    System.out.println("Rat Max x: " + playerCanvas.getBoundary().getMaxX());
                     if (w.collision(playerCanvas)) {
+                        System.out.println("True");
                         if (w.getCenterX() > playerCanvas.getCenterX()) {
                             rightBlocked = true;
                         } else {
