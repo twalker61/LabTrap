@@ -124,6 +124,8 @@ public class GamePane extends BorderPane {
                 if (k.name().equals("RIGHT")) {
                     moveRight = true;
                 }
+            } else {
+                gameScreen.setPieceSelector(e);
             }
         });
 

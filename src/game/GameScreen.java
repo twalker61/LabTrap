@@ -1,6 +1,8 @@
 package game;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -24,11 +27,16 @@ public class GameScreen extends StackPane {
     private List<PortalButton> buttons;
     private List<Floor> floorTiles;
     private List<Wall> walls;
+    private ExitPortal exit;
+    private double mouseX;
+    private double mouseY;
+    private GameElement piece;
+    private String pieceKey;
 
     public GameScreen() {
         backgroundElements = new AnchorPane();
         background = new HBox();
-        Floor f1 = new Floor();
+        /*Floor f1 = new Floor();
         Floor f2 = new Floor();
         Floor f3 = new Floor();
         Floor f4 = new Floor();
@@ -53,7 +61,7 @@ public class GameScreen extends StackPane {
         backgroundElements.setLeftAnchor(w, f1.getImage().getWidth()*4 + 10);
         w.setPositionX(f1.getImage().getWidth()*4 + 10);
         w.setPositionY(w.getImage().getHeight() + 100);
-        backgroundElements.getChildren().addAll(f1, f2, f3, f4, w);
+        backgroundElements.getChildren().addAll(f1, f2, f3, f4, w);*/
         ImageView img = new ImageView(getClass().getResource("../images/labtrapBackgroundCombined.png").toExternalForm());
         background.getChildren().add(img);
         backgroundElements.setPrefHeight(550);
@@ -62,12 +70,15 @@ public class GameScreen extends StackPane {
 
         buttons = new ArrayList<>();
         floorTiles = new ArrayList<>();
-        floorTiles.add(f1);
+        /*floorTiles.add(f1);
         floorTiles.add(f2);
         floorTiles.add(f3);
-        floorTiles.add(f4);
+        floorTiles.add(f4);*/
         walls = new ArrayList<>();
-        walls.add(w);
+        //walls.add(w);
+
+        //setPieceSelector();
+        setMouseListener();
     }
 
     public ImageView getBackgroundImage() {
@@ -89,5 +100,40 @@ public class GameScreen extends StackPane {
     }
     public List<Wall> getWalls() {
         return walls;
+    }
+
+    private void setMouseListener() {
+        this.setOnMouseMoved(e -> {
+            mouseX = e.getX();
+            mouseY = e.getY();
+        });
+
+        this.setOnMouseClicked(e -> {
+            //System.out.println(piece == null);
+            if (pieceKey.equals("w")) {
+                piece = new Wall();
+                walls.add((Wall) piece);
+            } else if (pieceKey.equals("f")) {
+                piece = new Floor();
+                floorTiles.add((Floor) piece);
+            } else if (pieceKey.equals("b")) {
+                piece = new PortalButton();
+                buttons.add((PortalButton) piece);
+            } else if (pieceKey.equals("e")) {
+                piece = new ExitPortal();
+                exit = (ExitPortal) piece;
+            }
+            backgroundElements.setTopAnchor(piece, mouseY);
+            backgroundElements.setLeftAnchor(piece, mouseX);
+            piece.setPositionX(mouseX);
+            piece.setPositionY(mouseY);
+            backgroundElements.getChildren().add(piece);
+        });
+    }
+
+    public void setPieceSelector(KeyEvent e) {
+        //System.out.println("This happened");
+        KeyCode k = e.getCode();
+        pieceKey = k.getName().toLowerCase();
     }
 }
