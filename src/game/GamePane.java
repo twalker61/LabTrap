@@ -167,10 +167,6 @@ public class GamePane extends BorderPane {
                     if (f.collision(playerCanvas)) {
                         grounded = true;
                         //System.out.println("true");
-                        System.out.println("Floor Min y: " + f.getBoundary().getMinY());
-                        System.out.println("Floor Max y: " + f.getBoundary().getMaxY());
-                        System.out.println("Rat Min y: " + playerCanvas.getBoundary().getMinY());
-                        System.out.println("Rat Max y: " + playerCanvas.getBoundary().getMaxY());
                     }
                     //System.out.println(grounded);
                 }
@@ -211,10 +207,11 @@ public class GamePane extends BorderPane {
                     playerCanvas.clear();
                     playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY(), direction);
 
-                    int magnify = 300;
+                    int magnify = (hDelta < 0) ? 500 : 300;
+                    /*int magnify = 300;
                     if (hDelta < 0) {
                         magnify = 500;
-                    }
+                    }*/
                     double newHValue =
                             clamp(scroller.getHvalue() + hDelta, scroller.getHmin(), scroller.getHmax());
                     if (playerCanvas.getX() > playerCanvas.getStartX()) {
@@ -242,14 +239,15 @@ public class GamePane extends BorderPane {
                             jump = false;
                         }
                     }
+                    playerDescent = !(grounded || jump);
 
-                    if (grounded) {
+                    /*if (grounded) {
                         playerDescent = false;
                     } else if (jump){
                         playerDescent = false;
                     } else {
                         playerDescent = true;
-                    }
+                    }*/
                     if (playerDescent) {
                         playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment, direction);
                     }

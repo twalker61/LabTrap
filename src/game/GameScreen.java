@@ -36,6 +36,12 @@ public class GameScreen extends StackPane {
     public GameScreen() {
         backgroundElements = new AnchorPane();
         background = new HBox();
+        Floor starter = new Floor();
+        backgroundElements.setBottomAnchor(starter, 10.0);
+        backgroundElements.setLeftAnchor(starter, 0.0);
+        starter.setPositionY(starter.getImage().getHeight());
+        starter.setPositionX(10);
+        backgroundElements.getChildren().add(starter);
         /*Floor f1 = new Floor();
         Floor f2 = new Floor();
         Floor f3 = new Floor();
@@ -70,6 +76,7 @@ public class GameScreen extends StackPane {
 
         buttons = new ArrayList<>();
         floorTiles = new ArrayList<>();
+        floorTiles.add(starter);
         /*floorTiles.add(f1);
         floorTiles.add(f2);
         floorTiles.add(f3);
@@ -86,10 +93,11 @@ public class GameScreen extends StackPane {
     }
 
     public int getButtonCount() {
-        if (buttons.size() == 0) {
+        return (buttons.size() == 0) ? 0 : buttons.get(0).getNumPressed();
+        /*if (buttons.size() == 0) {
             return 0;
         }
-        return buttons.get(0).getNumPressed();
+        return buttons.get(0).getNumPressed();*/
     }
 
     public List<PortalButton> getButtons() {

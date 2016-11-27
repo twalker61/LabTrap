@@ -46,12 +46,13 @@ public class PlayerCanvas extends Canvas {
     }
 
     public void draw(double x, double y, int direction) {
-        if (direction > 0) {
+        forward = (direction > 0);
+        /*if (direction > 0) {
             forward = true;
         }
         if (direction < 0) {
             forward = false;
-        }
+        }*/
         if (x > currentX || forward) {
             gc.drawImage(playerForward, x, y);
             forward = true;
