@@ -61,6 +61,8 @@ public class GamePane extends BorderPane {
     private double jumpHeight;
 
     public GamePane() {
+        playerDescent = true;
+
         layers = new StackPane();
         gameScreen = new GameScreen();
         scroller = new ScrollPane();
@@ -163,15 +165,16 @@ public class GamePane extends BorderPane {
                     if (f.collision(playerCanvas)) {
                         grounded = true;
                         //System.out.println("true");
+                        System.out.println("Floor Min y: " + f.getBoundary().getMinY());
+                        System.out.println("Floor Max y: " + f.getBoundary().getMaxY());
+                        System.out.println("Rat Min y: " + playerCanvas.getBoundary().getMinY());
+                        System.out.println("Rat Max y: " + playerCanvas.getBoundary().getMaxY());
                     }
+                    //System.out.println(grounded);
                 }
                 for (Wall w : gameScreen.getWalls()) {
-                    System.out.println("Floor Min x: " + w.getBoundary().getMinX());
-                    System.out.println("Floor Max x: " + w.getBoundary().getMaxX());
-                    System.out.println("Rat Min x: " + playerCanvas.getBoundary().getMinX());
-                    System.out.println("Rat Max x: " + playerCanvas.getBoundary().getMaxX());
                     if (w.collision(playerCanvas)) {
-                        System.out.println("True");
+                        //System.out.println("Blocked");
                         if (w.getCenterX() > playerCanvas.getCenterX()) {
                             rightBlocked = true;
                         } else {
@@ -222,24 +225,41 @@ public class GamePane extends BorderPane {
                         playerCanvas.clear();
                         playerCanvas.draw(playerCanvas.getX() + hDelta * magnify, playerCanvas.getY(), direction);
                     }
+                    // if jump, move up and player descent = false. When I hit jumpHeight, jump = false and player descent = true
 
                     if (jump) {
                         playerCanvas.clear();
+                        playerDescent = false;
                         if (hitButton) {
                             playerDescent = true;
                         }
-                        if (playerCanvas.getY() > jumpHeight && !playerDescent) {
+                        if (playerCanvas.getY() > jumpHeight) {
                             playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() - increment, direction);
                         } else {
-                            playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment, direction);
                             playerDescent = true;
-                        }
-                        if (grounded) {
-                            // previous 'if' logic: playerCanvas.getY() >= playerCanvas.getHeight() - playerCanvas.getGroundElevation()
                             jump = false;
-                            playerDescent = false;
                         }
                     }
+
+                    if (grounded) {
+                        playerDescent = false;
+                    } else if (jump){
+                        playerDescent = false;
+                    } else {
+                        playerDescent = true;
+                    }
+                    if (playerDescent) {
+                        playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment, direction);
+                    }
+
+
+                    /*playerDescent = true;
+                    if (!grounded) {
+                    } else {
+                        // previous 'if' logic: playerCanvas.getY() >= playerCanvas.getHeight() - playerCanvas.getGroundElevation()
+                        jump = false;
+                        playerDescent = false;
+                    }*/
                 }
                 lastUpdate = time;
             }

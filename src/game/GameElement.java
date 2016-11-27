@@ -42,7 +42,7 @@ public class GameElement extends Pane {
     }
 
     public Rectangle2D getBoundary() {
-        return new Rectangle2D(positionX, 500 - positionY, width, height);
+        return new Rectangle2D(positionX, 560 - positionY, width, height);
     }
 
     public double getCenterX() {
