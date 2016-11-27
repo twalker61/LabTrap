@@ -67,7 +67,7 @@ public class GamePane extends BorderPane {
         gameScreen = new GameScreen();
         scroller = new ScrollPane();
         scroller.setContent(gameScreen);
-        playerCanvas = new PlayerCanvas(550, 550, scroller);
+        playerCanvas = new PlayerCanvas(1017, 550, scroller);
         playerCanvas.setMouseTransparent(true);
 
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -153,8 +153,8 @@ public class GamePane extends BorderPane {
         AnimationTimer timer = new AnimationTimer() {
 
             long lastUpdate = 0 ;
-            double scroll = .75;
-            double increment = playerCanvas.getJumpMax() /15;
+            double scroll = .5;
+            double increment = playerCanvas.getJumpMax() /20;
             double vVal = scroller.getVvalue();
             @Override
             public void handle(long time) {
@@ -167,6 +167,7 @@ public class GamePane extends BorderPane {
                     if (f.collision(playerCanvas)) {
                         grounded = true;
                         //System.out.println("true");
+                        //System.out.println("Intersect with " + f);
                     }
                     //System.out.println(grounded);
                 }

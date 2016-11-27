@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -25,25 +26,31 @@ public class Main extends Application {
 
     private Stage stage;
     private GamePane root;
-    private GameScreen layer;
-    private ScrollPane scroller;
-    private HBox background;
-    private AnimationTimer gameLoop;
-    private ImageView backgroundImageView;
-    private double scroll = .5;
-    private boolean moveUp;
-    private boolean moveDown;
-    private boolean moveLeft;
-    private boolean moveRight;
+    private StackPane intro;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
         root = new GamePane();
+        intro = new StackPane();
+        intro.getChildren().add(new ImageView(new Image(getClass().getResource("../images/introScreenHoverOff.png").toExternalForm())));
+
+        intro.setOnMouseClicked(e -> {
+            stage.setScene(new Scene (root, 1067, 600));
+        });
+        intro.setOnMouseMoved(e -> {
+            if (e.getY() > 309 && e.getY() < 387 && e.getX() > 342 && e.getX() < 734) {
+                intro.getChildren().remove(0);
+                intro.getChildren().add(new ImageView(new Image(getClass().getResource("../images/introScreenHoverOn.png").toExternalForm())));
+            } else {
+                intro.getChildren().remove(0);
+                intro.getChildren().add(new ImageView(new Image(getClass().getResource("../images/introScreenHoverOff.png").toExternalForm())));
+            }
+        });
 
         stage = primaryStage;
         primaryStage.setTitle("Lab Trap!");
-        primaryStage.setScene(new Scene(welcomeScene(), 600, 600));
+        primaryStage.setScene(new Scene(intro, 1067, 600));
         primaryStage.show();
 
         root.getCanvas().requestFocus();
@@ -60,7 +67,7 @@ public class Main extends Application {
         vbox.setAlignment(Pos.CENTER);
         startButton.setOnAction(new EventHandler<ActionEvent>(){
             public void handle(ActionEvent t){
-                stage.setScene(new Scene (root, 600, 600));
+                stage.setScene(new Scene (root, 1067, 600));
             }
         });
         return vbox;

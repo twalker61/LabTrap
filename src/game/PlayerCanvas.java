@@ -32,7 +32,7 @@ public class PlayerCanvas extends Canvas {
         startY = getHeight() - groundElevation;
         currentX = startX;
         currentY = startY;
-        jumpMax = 85;
+        jumpMax = 100;
         gc = this.getGraphicsContext2D();
         playerForward = new Image(getClass().getResource("../images/labtrapRat.png").toExternalForm());
         playerBackward = new Image(getClass().getResource("../images/labtrapRatFlipped.png").toExternalForm());
@@ -46,13 +46,12 @@ public class PlayerCanvas extends Canvas {
     }
 
     public void draw(double x, double y, int direction) {
-        forward = (direction > 0);
-        /*if (direction > 0) {
+        if (direction > 0) {
             forward = true;
         }
         if (direction < 0) {
             forward = false;
-        }*/
+        }
         if (x > currentX || forward) {
             gc.drawImage(playerForward, x, y);
             forward = true;

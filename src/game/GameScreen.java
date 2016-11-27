@@ -117,25 +117,26 @@ public class GameScreen extends StackPane {
         });
 
         this.setOnMouseClicked(e -> {
-            //System.out.println(piece == null);
-            if (pieceKey.equals("w")) {
-                piece = new Wall();
-                walls.add((Wall) piece);
-            } else if (pieceKey.equals("f")) {
-                piece = new Floor();
-                floorTiles.add((Floor) piece);
-            } else if (pieceKey.equals("b")) {
-                piece = new PortalButton();
-                buttons.add((PortalButton) piece);
-            } else if (pieceKey.equals("e")) {
-                piece = new ExitPortal();
-                exit = (ExitPortal) piece;
+            if (pieceKey != null) {
+                if (pieceKey.equals("w")) {
+                    piece = new Wall();
+                    walls.add((Wall) piece);
+                } else if (pieceKey.equals("f")) {
+                    piece = new Floor();
+                    floorTiles.add((Floor) piece);
+                } else if (pieceKey.equals("b")) {
+                    piece = new PortalButton();
+                    buttons.add((PortalButton) piece);
+                } else if (pieceKey.equals("e")) {
+                    piece = new ExitPortal();
+                    exit = (ExitPortal) piece;
+                }
+                backgroundElements.setTopAnchor(piece, mouseY);
+                backgroundElements.setLeftAnchor(piece, mouseX);
+                piece.setPositionX(mouseX);
+                piece.setPositionY(mouseY);
+                backgroundElements.getChildren().add(piece);
             }
-            backgroundElements.setTopAnchor(piece, mouseY);
-            backgroundElements.setLeftAnchor(piece, mouseX);
-            piece.setPositionX(mouseX);
-            piece.setPositionY(mouseY);
-            backgroundElements.getChildren().add(piece);
         });
     }
 
