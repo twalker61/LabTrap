@@ -59,17 +59,23 @@ public class GamePane extends BorderPane {
     private boolean duck;
     private boolean playerDescent;
     private double jumpHeight;
+    private boolean builderMode;
 
-    public GamePane() {
+    private Main main;
+
+    public GamePane(Main m, boolean mode) {
+        main = m;
+        builderMode = mode;
         playerDescent = true;
 
         layers = new StackPane();
-        gameScreen = new GameScreen();
+        gameScreen = new GameScreen(main);
         scroller = new ScrollPane();
         scroller.setContent(gameScreen);
-        playerCanvas = new PlayerCanvas(1017, 550, scroller);
-        playerCanvas.setMouseTransparent(true);
-
+        if (!builderMode) {
+            playerCanvas = new PlayerCanvas(1017, 550, scroller);
+            playerCanvas.setMouseTransparent(true);
+        }
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         setLoop();
@@ -100,7 +106,11 @@ public class GamePane extends BorderPane {
         setTop(topBar);
         setBottom(bottomBar);
         setLeft(elementBar);
-        layers.getChildren().addAll(scroller, playerCanvas);
+        if (!builderMode) {
+            layers.getChildren().addAll(scroller, playerCanvas);
+        } else {
+            layers.getChildren().addAll(scroller);
+        }
         setCenter(layers);
 
     }
@@ -112,7 +122,9 @@ public class GamePane extends BorderPane {
                 if (k.name().equals("UP")) {
                     scrollLock = true;
                     jump = true;
-                    jumpHeight = playerCanvas.getY() - playerCanvas.getJumpMax();
+                    if (!builderMode) {
+                        jumpHeight = playerCanvas.getY() - playerCanvas.getJumpMax();
+                    }
                 }
                 if (k.name().equals("DOWN")) {
                     scrollLock = true;
@@ -154,7 +166,7 @@ public class GamePane extends BorderPane {
 
             long lastUpdate = 0 ;
             double scroll = .5;
-            double increment = playerCanvas.getJumpMax() /20;
+            double increment;
             double vVal = scroller.getVvalue();
             @Override
             public void handle(long time) {
@@ -162,28 +174,30 @@ public class GamePane extends BorderPane {
                 boolean rightBlocked = false;
                 boolean leftBlocked = false;
                 boolean hitButton = false;
-
-                for (Floor f : gameScreen.getFloors()) {
-                    if (f.collision(playerCanvas)) {
-                        grounded = true;
-                        //System.out.println("true");
-                        //System.out.println("Intersect with " + f);
+                if (!builderMode) {
+                    increment = playerCanvas.getJumpMax() /20;
+                    for (Floor f : main.getFloorList()) {
+                        if (f.collision(playerCanvas)) {
+                            grounded = true;
+                            //System.out.println("true");
+                            //System.out.println("Intersect with " + f);
+                        }
+                        //System.out.println(grounded);
                     }
-                    //System.out.println(grounded);
-                }
-                for (Wall w : gameScreen.getWalls()) {
-                    if (w.collision(playerCanvas)) {
-                        //System.out.println("Blocked");
-                        if (w.getCenterX() > playerCanvas.getCenterX()) {
-                            rightBlocked = true;
-                        } else {
-                            leftBlocked = true;
+                    for (Wall w : main.getWallList()) {
+                        if (w.collision(playerCanvas)) {
+                            //System.out.println("Blocked");
+                            if (w.getCenterX() > playerCanvas.getCenterX()) {
+                                rightBlocked = true;
+                            } else {
+                                leftBlocked = true;
+                            }
                         }
                     }
-                }
-                for (PortalButton b : gameScreen.getButtons()) {
-                    if (b.collision(playerCanvas)) {
-                        hitButton = true;
+                    for (PortalButton b : main.getButtonList()) {
+                        if (b.collision(playerCanvas)) {
+                            hitButton = true;
+                        }
                     }
                 }
 
@@ -205,8 +219,10 @@ public class GamePane extends BorderPane {
 
                     int direction = (int)(hDelta * 1000);
 
-                    playerCanvas.clear();
-                    playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY(), direction);
+                    if (!builderMode) {
+                        playerCanvas.clear();
+                        playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY(), direction);
+                    }
 
                     int magnify = (hDelta < 0) ? 500 : 300;
                     /*int magnify = 300;
@@ -215,32 +231,39 @@ public class GamePane extends BorderPane {
                     }*/
                     double newHValue =
                             clamp(scroller.getHvalue() + hDelta, scroller.getHmin(), scroller.getHmax());
-                    if (playerCanvas.getX() > playerCanvas.getStartX()) {
-                        playerCanvas.clear();
-                        playerCanvas.draw(playerCanvas.getX() + hDelta * magnify, playerCanvas.getY(), direction);
+
+                    if (!builderMode) {
+                        if (playerCanvas.getX() > playerCanvas.getStartX()) {
+                            playerCanvas.clear();
+                            playerCanvas.draw(playerCanvas.getX() + hDelta * magnify, playerCanvas.getY(), direction);
+                        } else {
+                            scroller.setHvalue(newHValue);
+                        }
+                        if (newHValue == scroller.getHmax() && moveRight) {
+                            playerCanvas.clear();
+                            playerCanvas.draw(playerCanvas.getX() + hDelta * magnify, playerCanvas.getY(), direction);
+                        }
                     } else {
                         scroller.setHvalue(newHValue);
                     }
-                    if (newHValue == scroller.getHmax() && moveRight) {
-                        playerCanvas.clear();
-                        playerCanvas.draw(playerCanvas.getX() + hDelta * magnify, playerCanvas.getY(), direction);
-                    }
+
                     // if jump, move up and player descent = false. When I hit jumpHeight, jump = false and player descent = true
 
-                    if (jump) {
-                        playerCanvas.clear();
-                        playerDescent = false;
-                        if (hitButton) {
-                            playerDescent = true;
+                    if (!builderMode) {
+                        if (jump) {
+                            playerCanvas.clear();
+                            playerDescent = false;
+                            if (hitButton) {
+                                playerDescent = true;
+                            }
+                            if (playerCanvas.getY() > jumpHeight) {
+                                playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() - increment, direction);
+                            } else {
+                                playerDescent = true;
+                                jump = false;
+                            }
                         }
-                        if (playerCanvas.getY() > jumpHeight) {
-                            playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() - increment, direction);
-                        } else {
-                            playerDescent = true;
-                            jump = false;
-                        }
-                    }
-                    playerDescent = !(grounded || jump);
+                        playerDescent = !(grounded || jump);
 
                     /*if (grounded) {
                         playerDescent = false;
@@ -249,9 +272,9 @@ public class GamePane extends BorderPane {
                     } else {
                         playerDescent = true;
                     }*/
-                    if (playerDescent) {
-                        playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment, direction);
-                    }
+                        if (playerDescent) {
+                            playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment, direction);
+                        }
 
 
                     /*playerDescent = true;
@@ -261,6 +284,8 @@ public class GamePane extends BorderPane {
                         jump = false;
                         playerDescent = false;
                     }*/
+                    }
+
                 }
                 lastUpdate = time;
             }

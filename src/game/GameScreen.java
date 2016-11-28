@@ -32,13 +32,15 @@ public class GameScreen extends StackPane {
     private double mouseY;
     private GameElement piece;
     private String pieceKey;
+    private Main main;
 
-    public GameScreen() {
+    public GameScreen(Main m) {
+        main = m;
         backgroundElements = new AnchorPane();
         background = new HBox();
         Floor starter = new Floor();
-        backgroundElements.setBottomAnchor(starter, 10.0);
-        backgroundElements.setLeftAnchor(starter, 0.0);
+        AnchorPane.setTopAnchor(starter, 550 - (starter.getImage().getHeight()));
+        AnchorPane.setLeftAnchor(starter, 0.0);
         starter.setPositionY(starter.getImage().getHeight());
         starter.setPositionX(10);
         backgroundElements.getChildren().add(starter);
@@ -71,17 +73,21 @@ public class GameScreen extends StackPane {
         ImageView img = new ImageView(getClass().getResource("../images/labtrapBackgroundCombined.png").toExternalForm());
         background.getChildren().add(img);
         backgroundElements.setPrefHeight(550);
+        backgroundElements.setMaxHeight(550);
 
         this.getChildren().addAll(background, backgroundElements);
 
         buttons = new ArrayList<>();
+        main.setButtonList(buttons);
         floorTiles = new ArrayList<>();
         floorTiles.add(starter);
+        main.setFloorList(floorTiles);
         /*floorTiles.add(f1);
         floorTiles.add(f2);
         floorTiles.add(f3);
         floorTiles.add(f4);*/
         walls = new ArrayList<>();
+        main.setWallList(walls);
         //walls.add(w);
 
         //setPieceSelector();
@@ -100,7 +106,7 @@ public class GameScreen extends StackPane {
         return buttons.get(0).getNumPressed();*/
     }
 
-    public List<PortalButton> getButtons() {
+    /*public List<PortalButton> getButtons() {
         return buttons;
     }
     public List<Floor> getFloors() {
@@ -108,7 +114,7 @@ public class GameScreen extends StackPane {
     }
     public List<Wall> getWalls() {
         return walls;
-    }
+    }*/
 
     private void setMouseListener() {
         this.setOnMouseMoved(e -> {
@@ -117,22 +123,26 @@ public class GameScreen extends StackPane {
         });
 
         this.setOnMouseClicked(e -> {
-            if (pieceKey != null) {
+            if (pieceKey != null ) {
                 if (pieceKey.equals("w")) {
                     piece = new Wall();
                     walls.add((Wall) piece);
+                    main.setWallList(walls);
                 } else if (pieceKey.equals("f")) {
                     piece = new Floor();
                     floorTiles.add((Floor) piece);
+                    main.setFloorList(floorTiles);
                 } else if (pieceKey.equals("b")) {
                     piece = new PortalButton();
                     buttons.add((PortalButton) piece);
+                    main.setButtonList(buttons);
                 } else if (pieceKey.equals("e")) {
                     piece = new ExitPortal();
                     exit = (ExitPortal) piece;
+                    main.setExitPortal(exit);
                 }
-                backgroundElements.setTopAnchor(piece, mouseY);
-                backgroundElements.setLeftAnchor(piece, mouseX);
+                AnchorPane.setTopAnchor(piece, mouseY);
+                AnchorPane.setLeftAnchor(piece, mouseX);
                 piece.setPositionX(mouseX);
                 piece.setPositionY(mouseY);
                 backgroundElements.getChildren().add(piece);
@@ -144,5 +154,8 @@ public class GameScreen extends StackPane {
         //System.out.println("This happened");
         KeyCode k = e.getCode();
         pieceKey = k.getName().toLowerCase();
+        if (pieceKey.equals("u")) {
+            //TODO: undo a piece creation? Need to know which piece was made to remove last index from the right list
+        }
     }
 }
