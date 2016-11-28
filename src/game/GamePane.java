@@ -9,20 +9,15 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-//import java.util.Duration;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by twalker61 on 11/14/16.
@@ -30,8 +25,6 @@ import java.util.List;
 public class GamePane extends BorderPane {
 
     private StackPane layers;
-    private VBox elementBar;
-    private List<ImageView> elements;
     private HBox topBar;
     private Label timerLabel;
     private StringProperty clock = new SimpleStringProperty("00:00:00");
@@ -41,24 +34,20 @@ public class GamePane extends BorderPane {
     private Label buttonCountLabel;
     private HBox bottomBar;
     private Button playButton;
-    private Label statusCheck;
     private GameScreen gameScreen;
     private ScrollPane scroller;
     private PlayerCanvas playerCanvas;
 
-    //private boolean moveUp;
-    //private boolean moveDown;
     private boolean moveLeft;
     private boolean moveRight;
     private boolean scrollLock;
     private boolean jump;
-    private boolean duck;
     private boolean playerDescent;
     private double jumpHeight;
     private boolean builderMode;
     private int buttonCount;
 
-    private Main main;
+    private static Main main;
 
     public GamePane(Main m, boolean mode) {
         main = m;
@@ -66,7 +55,7 @@ public class GamePane extends BorderPane {
         playerDescent = true;
 
         layers = new StackPane();
-        gameScreen = new GameScreen(main);
+        gameScreen = new GameScreen(main, builderMode);
         scroller = new ScrollPane();
         scroller.setContent(gameScreen);
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -75,10 +64,6 @@ public class GamePane extends BorderPane {
 
         setKeyEvents();
 
-        elementBar = new VBox(10);
-        elements = new ArrayList<>();
-        //fill list with thumbnails
-        elementBar.getChildren().addAll(elements);
         topBar = new HBox(10);
         buttonCountLabel = new Label();
         updateButtonCount();
@@ -97,8 +82,7 @@ public class GamePane extends BorderPane {
         playButton.setOnAction(e -> {
             main.switchToGamePlay();
         });
-        statusCheck = new Label("");
-        bottomBar.getChildren().addAll(playButton, statusCheck);
+        bottomBar.getChildren().addAll(playButton);
 
         if (!builderMode) {
             playerCanvas = new PlayerCanvas(1017, 550, scroller);
@@ -110,7 +94,6 @@ public class GamePane extends BorderPane {
         }
         setTop(topBar);
         setBottom(bottomBar);
-        setLeft(elementBar);
         if (!builderMode) {
             layers.getChildren().addAll(scroller, playerCanvas);
         } else {
@@ -137,7 +120,6 @@ public class GamePane extends BorderPane {
                 }
                 if (k.name().equals("DOWN")) {
                     scrollLock = true;
-                    duck = true;
                 }
                 if (k.name().equals("LEFT")) {
                     moveLeft = true;
@@ -158,7 +140,6 @@ public class GamePane extends BorderPane {
                 }
                 if (k.name().equals("DOWN")) {
                     scrollLock = false;
-                    duck = false;
                 }
                 if (k.name().equals("LEFT")) {
                     moveLeft = false;
@@ -188,14 +169,10 @@ public class GamePane extends BorderPane {
                     for (Floor f : main.getFloorList()) {
                         if (f.collision(playerCanvas)) {
                             grounded = true;
-                            //System.out.println("true");
-                            //System.out.println("Intersect with " + f);
                         }
-                        //System.out.println(grounded);
                     }
                     for (Wall w : main.getWallList()) {
                         if (w.collision(playerCanvas)) {
-                            //System.out.println("Blocked");
                             if (w.getCenterX() > playerCanvas.getCenterX()) {
                                 rightBlocked = true;
                             } else {
@@ -242,10 +219,6 @@ public class GamePane extends BorderPane {
                     }
 
                     int magnify = (hDelta < 0) ? 500 : 300;
-                    /*int magnify = 300;
-                    if (hDelta < 0) {
-                        magnify = 500;
-                    }*/
                     double newHValue =
                             clamp(scroller.getHvalue() + hDelta, scroller.getHmin(), scroller.getHmax());
 
@@ -282,25 +255,9 @@ public class GamePane extends BorderPane {
                         }
                         playerDescent = !(grounded || jump);
 
-                    /*if (grounded) {
-                        playerDescent = false;
-                    } else if (jump){
-                        playerDescent = false;
-                    } else {
-                        playerDescent = true;
-                    }*/
                         if (playerDescent) {
                             playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment, direction);
                         }
-
-
-                    /*playerDescent = true;
-                    if (!grounded) {
-                    } else {
-                        // previous 'if' logic: playerCanvas.getY() >= playerCanvas.getHeight() - playerCanvas.getGroundElevation()
-                        jump = false;
-                        playerDescent = false;
-                    }*/
                     }
 
                 }
@@ -315,11 +272,11 @@ public class GamePane extends BorderPane {
         return Math.min(max, Math.max(min, value));
     }
 
-    public ScrollPane getScroller() {
+    /*public ScrollPane getScroller() {
         return scroller;
     }
     public Canvas getCanvas() {
         return playerCanvas;
-    }
+    }*/
 
 }

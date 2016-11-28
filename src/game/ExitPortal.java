@@ -21,4 +21,8 @@ public class ExitPortal extends GameElement {
         super.setImage(openPortal.getImage());
     }
 
+    public boolean isOpen() {
+        return open;
+    }
+
 }

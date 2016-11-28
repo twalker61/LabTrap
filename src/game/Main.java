@@ -26,21 +26,21 @@ public class Main extends Application {
     private StackPane instructions;
     private GamePane builder;
     private StackPane results;
-    private List<PortalButton> buttons;
-    private List<Floor> floorTiles;
-    private List<Wall> walls;
-    private ExitPortal exit;
+    private static List<PortalButton> buttons;
+    private static List<Floor> floorTiles;
+    private static List<Wall> walls;
+    private static ExitPortal exit;
     private boolean hover;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
+        builder = new GamePane(this, true);
         play = new GamePane(this, false);
         welcome = new StackPane();
         welcome.getChildren().add(new ImageView(new Image(getClass().getResource("../images/introScreen.png").toExternalForm())));
         instructions = new StackPane();
         instructions.getChildren().add(new ImageView(new Image(getClass().getResource("../images/introScreen.png").toExternalForm())));
-        builder = new GamePane(this, true);
         results = new StackPane();
         results.getChildren().addAll(new ImageView(new Image(getClass().getResource("../images/loserScreen.png").toExternalForm())),
                 new ImageView(new Image(getClass().getResource("../images/loserScreenHover.png").toExternalForm())),
@@ -78,29 +78,12 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(welcome, 1067, 600));
         primaryStage.show();
 
-        play.getCanvas().requestFocus();
-
     }
 
     public void switchToGamePlay() {
         stage.setScene(new Scene (play, 1067, 600));
+        play.requestFocus();
     }
-
-    /*public Parent welcomeScene() {
-        VBox vbox = new VBox(30);
-        Button startButton = new Button();
-        startButton.setText("START");
-        Button instructionButton = new Button();
-        instructionButton.setText("INSTRUCTION");
-        vbox.getChildren().addAll(startButton, instructionButton);
-        vbox.setAlignment(Pos.CENTER);
-        startButton.setOnAction(new EventHandler<ActionEvent>(){
-            public void handle(ActionEvent t){
-                stage.setScene(new Scene (play, 1067, 600));
-            }
-        });
-        return vbox;
-    }*/
 
     public void setWallList(List<Wall> w) {
         walls = w;
