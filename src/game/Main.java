@@ -82,6 +82,10 @@ public class Main extends Application {
 
     }
 
+    public void switchToGamePlay() {
+        stage.setScene(new Scene (play, 1067, 600));
+    }
+
     /*public Parent welcomeScene() {
         VBox vbox = new VBox(30);
         Button startButton = new Button();

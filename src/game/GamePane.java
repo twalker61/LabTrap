@@ -40,7 +40,7 @@ public class GamePane extends BorderPane {
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault());
     private Label buttonCountLabel;
     private HBox bottomBar;
-    private Button restart;
+    private Button playButton;
     private Label statusCheck;
     private GameScreen gameScreen;
     private ScrollPane scroller;
@@ -93,13 +93,17 @@ public class GamePane extends BorderPane {
         timeline.play();
         topBar.getChildren().addAll(timerLabel, buttonCountLabel);
         bottomBar = new HBox(10);
-        restart = new Button("Restart");
+        playButton = new Button("Play Game");
+        playButton.setOnAction(e -> {
+            main.switchToGamePlay();
+        });
         statusCheck = new Label("");
-        bottomBar.getChildren().addAll(restart, statusCheck);
+        bottomBar.getChildren().addAll(playButton, statusCheck);
 
         if (!builderMode) {
             playerCanvas = new PlayerCanvas(1017, 550, scroller);
             playerCanvas.setMouseTransparent(true);
+            playButton.setVisible(false);
         } else {
             buttonCountLabel.setVisible(false);
             timerLabel.setVisible(false);
