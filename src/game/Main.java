@@ -186,6 +186,10 @@ public class Main extends Application {
     public void switchToResults(boolean w) {
         won = w;
         results = new StackPane();
+        walls.clear();
+        floorTiles.clear();
+        buttons.clear();
+        exits.clear();
         setResultsMouseEvents(results);
         if (won) {
             results.getChildren().add(new ImageView(new Image(getClass().getResource("../images/winnerScreen.png").toExternalForm())));

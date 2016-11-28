@@ -124,9 +124,27 @@ public class GameScreen extends StackPane {
 
     public void setPieceSelector(KeyEvent e) {
         KeyCode k = e.getCode();
-        pieceKey = k.getName().toLowerCase();
-        if (pieceKey.equals("u")) {
-            //TODO: undo a lastPiece creation? Need to know which lastPiece was made to remove last index from the right list
+        if (k.getName().toLowerCase().equals("u")) {
+            if (pieceKey != null) {
+                if (pieceKey.equals("f") && floorTiles.size() > 0) {
+                    floorTiles.remove(floorTiles.size() - 1);
+                    backgroundElements.getChildren().remove(backgroundElements.getChildren().size() - 1);
+                }
+                if (pieceKey.equals("w") && walls.size() > 0) {
+                    walls.remove(walls.size() - 1);
+                    backgroundElements.getChildren().remove(backgroundElements.getChildren().size() - 1);
+                }
+                if (pieceKey.equals("b") && buttons.size() > 0) {
+                    buttons.remove(buttons.size() - 1);
+                    backgroundElements.getChildren().remove(backgroundElements.getChildren().size() - 1);
+                }
+                if (pieceKey.equals("e") && exits.size() > 0) {
+                    exits.remove(exits.size() - 1);
+                    backgroundElements.getChildren().remove(backgroundElements.getChildren().size() - 1);
+                }
+            }
+        } else {
+            pieceKey = k.getName().toLowerCase();
         }
     }
 }
