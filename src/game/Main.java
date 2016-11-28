@@ -1,5 +1,6 @@
 package game;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,9 +101,19 @@ public class Main extends Application {
                     node.getChildren().add(new ImageView(new Image(getClass().getResource("../images/instructionscreen2.png").toExternalForm())));
                     instructionPage = 2;
                 } if (next) {
-                    builder = new GamePane(this, true);
-                    stage.setScene(new Scene (builder, 1067, 600));
+                    instructionPage = 4;
                 }
+            }
+            if (instructionPage == 4) {
+                node.getChildren().add(new ImageView(new Image(getClass
+                        ().getResource("../images/stageonescreen.png").toExternalForm())));
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                builder = new GamePane(this, true);
+                delay.setOnFinished(event -> {
+                    stage.setScene(new Scene(builder, 1067, 600))
+                    ;
+                });
+                delay.play();
             }
         });
         node.setOnMouseMoved(e -> {
@@ -146,6 +158,9 @@ public class Main extends Application {
                     back = false;
                     next = false;
                 }
+            }
+            if (instructionPage == 4) {
+                node.getChildren().add(new ImageView(new Image(getClass().getResource("../images/stageonescreen.png").toExternalForm())));
             }
         });
     }
