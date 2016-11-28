@@ -41,6 +41,14 @@ public class GameElement extends Pane {
         positionY = y;
     }
 
+    public double getPositionX() {
+        return positionX;
+    }
+
+    public double getPositionY() {
+        return positionY;
+    }
+
     public Rectangle2D getBoundary() {
         return new Rectangle2D(positionX, 560 - positionY, width, height);
     }

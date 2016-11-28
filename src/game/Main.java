@@ -13,6 +13,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,17 +27,16 @@ public class Main extends Application {
     private StackPane instructions;
     private GamePane builder;
     private StackPane results;
-    private static List<PortalButton> buttons;
-    private static List<Floor> floorTiles;
-    private static List<Wall> walls;
-    private static ExitPortal exit;
+    private static List<PortalButton> buttons = new ArrayList<>();
+    private static List<Floor> floorTiles = new ArrayList<>();
+    private static List<Wall> walls = new ArrayList<>();
+    private static List<ExitPortal> exits = new ArrayList<>();
     private boolean hover;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
 
         builder = new GamePane(this, true);
-        play = new GamePane(this, false);
         welcome = new StackPane();
         welcome.getChildren().add(new ImageView(new Image(getClass().getResource("../images/introScreen.png").toExternalForm())));
         instructions = new StackPane();
@@ -81,21 +81,22 @@ public class Main extends Application {
     }
 
     public void switchToGamePlay() {
+        play = new GamePane(this, false);
         stage.setScene(new Scene (play, 1067, 600));
         play.requestFocus();
     }
 
-    public void setWallList(List<Wall> w) {
-        walls = w;
+    public void addWall(Wall w) {
+        walls.add(w);
     }
-    public void setFloorList(List<Floor> f) {
-        floorTiles = f;
+    public void addFloor(Floor f) {
+        floorTiles.add(f);
     }
-    public void setButtonList(List<PortalButton> b) {
-        buttons = b;
+    public void addButton(PortalButton b) {
+        buttons.add(b);
     }
-    public void setExitPortal(ExitPortal p) {
-        exit = p;
+    public void addExit(ExitPortal p) {
+        exits.add(p);
     }
 
     public List<Wall> getWallList() {
@@ -107,8 +108,8 @@ public class Main extends Application {
     public List<PortalButton> getButtonList() {
         return buttons;
     }
-    public ExitPortal getExitPortal() {
-        return exit;
+    public List<ExitPortal> getExitPortals() {
+        return exits;
     }
 
 

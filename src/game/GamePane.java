@@ -189,7 +189,9 @@ public class GamePane extends BorderPane {
                                 updateButtonCount();
                             }
                             if (buttonCount >= 3) {
-                                main.getExitPortal().open();
+                                for (ExitPortal p : main.getExitPortals()) {
+                                    p.open();
+                                }
                             }
                         }
                     }

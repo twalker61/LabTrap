@@ -18,7 +18,7 @@ public class GameScreen extends StackPane {
     private List<PortalButton> buttons;
     private List<Floor> floorTiles;
     private List<Wall> walls;
-    private ExitPortal exit;
+    private List<ExitPortal> exits;
     private double mouseX;
     private double mouseY;
     private GameElement lastPiece;
@@ -35,9 +35,10 @@ public class GameScreen extends StackPane {
         Floor starter = new Floor();
         AnchorPane.setTopAnchor(starter, 550 - (starter.getImage().getHeight()));
         AnchorPane.setLeftAnchor(starter, 0.0);
-        starter.setPositionY(starter.getImage().getHeight());
+        starter.setPositionY(starter.getImage().getHeight()); //should be 550 - (starter.getImage().getHeight()) ??
         starter.setPositionX(10);
         backgroundElements.getChildren().add(starter);
+
         ImageView img = new ImageView(getClass().getResource("../images/labtrapBackgroundCombined.png").toExternalForm());
         background.getChildren().add(img);
         backgroundElements.setPrefHeight(550);
@@ -45,21 +46,45 @@ public class GameScreen extends StackPane {
 
         this.getChildren().addAll(background, backgroundElements);
 
-        buttons = new ArrayList<>();
-        main.setButtonList(buttons);
-        floorTiles = new ArrayList<>();
-        floorTiles.add(starter);
-        main.setFloorList(floorTiles);
-        walls = new ArrayList<>();
-        main.setWallList(walls);
+        buttons = main.getButtonList();
+        floorTiles = main.getFloorList();
+        walls = main.getWallList();
+        exits = main.getExitPortals();
 
-        if (builderMode) {
+        if (!builderMode) {
+            restorePieces();
+        } else {
+            main.addFloor(starter);
+            floorTiles = main.getFloorList();
             setMouseListener();
         }
     }
 
     public ImageView getBackgroundImage() {
         return (ImageView) background.getChildren().get(0);
+    }
+
+    private void restorePieces() {
+        for (int i = 1; i < floorTiles.size(); i++) {
+            AnchorPane.setTopAnchor(floorTiles.get(i), floorTiles.get(i).getPositionY());
+            AnchorPane.setLeftAnchor(floorTiles.get(i), floorTiles.get(i).getPositionX());
+            backgroundElements.getChildren().add(floorTiles.get(i));
+        }
+        for (Wall w : walls) {
+            AnchorPane.setTopAnchor(w, w.getPositionY());
+            AnchorPane.setLeftAnchor(w, w.getPositionX());
+            backgroundElements.getChildren().add(w);
+        }
+        for (PortalButton b : buttons) {
+            AnchorPane.setTopAnchor(b, b.getPositionY());
+            AnchorPane.setLeftAnchor(b, b.getPositionX());
+            backgroundElements.getChildren().add(b);
+        }
+        for (ExitPortal e : exits) {
+            AnchorPane.setTopAnchor(e, e.getPositionY());
+            AnchorPane.setLeftAnchor(e, e.getPositionX());
+            backgroundElements.getChildren().add(e);
+        }
     }
 
     private void setMouseListener() {
@@ -73,20 +98,20 @@ public class GameScreen extends StackPane {
                 if (pieceKey.equals("w")) {
                     lastPiece = new Wall();
                     //lastPieceList = walls;
-                    walls.add((Wall) lastPiece);
-                    main.setWallList(walls);
+                    main.addWall((Wall) lastPiece);
+                    walls = main.getWallList();
                 } else if (pieceKey.equals("f")) {
                     lastPiece = new Floor();
-                    floorTiles.add((Floor) lastPiece);
-                    main.setFloorList(floorTiles);
+                    main.addFloor((Floor) lastPiece);
+                    floorTiles = main.getFloorList();
                 } else if (pieceKey.equals("b")) {
                     lastPiece = new PortalButton();
-                    buttons.add((PortalButton) lastPiece);
-                    main.setButtonList(buttons);
+                    main.addButton((PortalButton) lastPiece);
+                    buttons = main.getButtonList();
                 } else if (pieceKey.equals("e")) {
                     lastPiece = new ExitPortal();
-                    exit = (ExitPortal) lastPiece;
-                    main.setExitPortal(exit);
+                    main.addExit((ExitPortal) lastPiece);
+                    exits = main.getExitPortals();
                 }
                 AnchorPane.setTopAnchor(lastPiece, mouseY);
                 AnchorPane.setLeftAnchor(lastPiece, mouseX);
