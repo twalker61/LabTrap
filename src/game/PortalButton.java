@@ -11,6 +11,7 @@ public class PortalButton extends GameElement {
 
     public PortalButton() {
         super();
+        super.setImage(new Image(getClass().getResource("../images/portalButton.png").toExternalForm()));
     }
 
     public void press() {
