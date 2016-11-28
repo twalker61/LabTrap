@@ -84,7 +84,7 @@ public class PlayerCanvas extends Canvas {
     }
 
     public Rectangle2D getBoundary() {
-        return new Rectangle2D(currentX + scroll.getHvalue() * ((GameScreen)(scroll.getContent())).getBackgroundImage().getImage().getWidth() * .75, currentY, playerForward.getWidth(), playerForward.getHeight());
+        return new Rectangle2D(currentX + scroll.getHvalue() * ((GameScreen)(scroll.getContent())).getBackgroundImage().getImage().getWidth() * .5, currentY, playerForward.getWidth(), playerForward.getHeight());
     }
 
     public double getJumpMax() {

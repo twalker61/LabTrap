@@ -35,7 +35,7 @@ public class GameScreen extends StackPane {
         Floor starter = new Floor();
         AnchorPane.setTopAnchor(starter, 550 - (starter.getImage().getHeight()));
         AnchorPane.setLeftAnchor(starter, 0.0);
-        starter.setPositionY(starter.getImage().getHeight()); //should be 550 - (starter.getImage().getHeight()) ??
+        starter.setPositionY(550 - (starter.getImage().getHeight())); //should be 550 - (starter.getImage().getHeight()) ??
         starter.setPositionX(10);
         backgroundElements.getChildren().add(starter);
 

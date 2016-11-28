@@ -4,6 +4,7 @@ import com.sun.tools.javah.Util;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.canvas.Canvas;
@@ -190,18 +191,23 @@ public class GamePane extends BorderPane {
                                 buttonCount++;
                                 updateButtonCount();
                             }
-                            if (buttonCount >= 3) {
-                                for (ExitPortal p : main.getExitPortals()) {
-                                    p.open();
-                                }
-                            }
                         }
                     }
+                    if (buttonCount >= 3) {
+                        for (ExitPortal e : main.getExitPortals()) {
+                            e.open();
+                        }
+                    }
+
                     for (ExitPortal e : main.getExitPortals()) {
                         if (e.collision(playerCanvas) && e.isOpen()) {
+                            System.out.println("impact");
                             if (!notHere) {
-                                main.switchToResults(true);
-                                notHere = true;
+                                System.out.println("heading out");
+                                Platform.runLater(() -> {
+                                    main.switchToResults(true);
+                                    notHere = true;
+                                });
                             }
                         }
                     }
