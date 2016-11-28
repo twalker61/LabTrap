@@ -1,5 +1,6 @@
 package game;
 
+import com.sun.tools.javah.Util;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -46,6 +47,7 @@ public class GamePane extends BorderPane {
     private double jumpHeight;
     private boolean builderMode;
     private int buttonCount;
+    private boolean notHere;
 
     private static Main main;
 
@@ -195,6 +197,14 @@ public class GamePane extends BorderPane {
                             }
                         }
                     }
+                    for (ExitPortal e : main.getExitPortals()) {
+                        if (e.collision(playerCanvas) && e.isOpen()) {
+                            if (!notHere) {
+                                main.switchToResults(true);
+                                notHere = true;
+                            }
+                        }
+                    }
                 }
 
                 //if playerCanvas and game elements intersecting, react.
@@ -216,6 +226,12 @@ public class GamePane extends BorderPane {
                     int direction = (int)(hDelta * 1000);
 
                     if (!builderMode) {
+                        if (playerCanvas.getY() > 600) {
+                            if (!notHere) {
+                                main.switchToResults(false);
+                                notHere = true;
+                            }
+                        }
                         playerCanvas.clear();
                         playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY(), direction);
                     }

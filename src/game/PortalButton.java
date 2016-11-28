@@ -11,11 +11,12 @@ public class PortalButton extends GameElement {
 
     public PortalButton() {
         super();
-        super.setImage(new Image(getClass().getResource("../images/portalButton.png").toExternalForm()));
+        super.setImage(new Image(getClass().getResource("../images/button.png").toExternalForm()));
     }
 
     public void press() {
         pressed = true;
+        super.setImage(new Image(getClass().getResource("../images/buttonPressed.png").toExternalForm()));
     }
 
     public boolean pressed() {
