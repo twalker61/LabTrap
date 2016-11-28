@@ -193,8 +193,20 @@ public class Main extends Application {
     }
 
     public void switchToGamePlay() {
+//        play = new GamePane(this, false);
+//        stage.setScene(new Scene (play, 1067, 600));
+//        play.requestFocus();
+
+        StackPane stageTwo = new StackPane();
+        stageTwo.getChildren().add(new ImageView(new Image(getClass
+                ().getResource("../images/stagetwoscreen.png").toExternalForm())));
+        stage.setScene(new Scene(stageTwo, 1067, 600));
+        PauseTransition delay = new PauseTransition(Duration.seconds(1));
         play = new GamePane(this, false);
-        stage.setScene(new Scene (play, 1067, 600));
+        delay.setOnFinished(event -> {
+            stage.setScene(new Scene (play, 1067, 600));
+        });
+        delay.play();
         play.requestFocus();
     }
 
