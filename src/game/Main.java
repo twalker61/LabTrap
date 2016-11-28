@@ -205,9 +205,9 @@ public class Main extends Application {
         play = new GamePane(this, false);
         delay.setOnFinished(event -> {
             stage.setScene(new Scene (play, 1067, 600));
+            play.requestFocus();
         });
         delay.play();
-        play.requestFocus();
     }
 
     public void switchToResults(boolean w) {

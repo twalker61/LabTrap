@@ -201,9 +201,7 @@ public class GamePane extends BorderPane {
 
                     for (ExitPortal e : main.getExitPortals()) {
                         if (e.collision(playerCanvas) && e.isOpen()) {
-                            System.out.println("impact");
                             if (!notHere) {
-                                System.out.println("heading out");
                                 Platform.runLater(() -> {
                                     main.switchToResults(true);
                                     notHere = true;
