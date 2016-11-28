@@ -45,7 +45,7 @@ public class Main extends Application {
         results.getChildren().addAll(new ImageView(new Image(getClass().getResource("../images/loserScreen.png").toExternalForm())),
                 new ImageView(new Image(getClass().getResource("../images/loserScreenHover.png").toExternalForm())),
                 new ImageView(new Image(getClass().getResource("../images/winnerScreen.png").toExternalForm())),
-                new ImageView(new Image(getClass().getResource("../images/winnderScreenHover.png").toExternalForm())));
+                new ImageView(new Image(getClass().getResource("../images/winnerScreenHover.png").toExternalForm())));
         //results.getChildren().get(0).setVisible(false);
         //Do that to the three images that don't apply to the game state after level completion
 

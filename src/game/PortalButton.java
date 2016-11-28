@@ -7,13 +7,17 @@ import javafx.scene.image.Image;
  */
 public class PortalButton extends GameElement {
 
-    private int numPressed;
+    private boolean pressed;
 
     public PortalButton() {
         super();
     }
 
-    public int getNumPressed() {
-        return numPressed;
+    public void press() {
+        pressed = true;
+    }
+
+    public boolean pressed() {
+        return pressed;
     }
 }

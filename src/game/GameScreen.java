@@ -1,18 +1,9 @@
 package game;
 
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +21,8 @@ public class GameScreen extends StackPane {
     private ExitPortal exit;
     private double mouseX;
     private double mouseY;
-    private GameElement piece;
+    private GameElement lastPiece;
+    private List<GameElement> lastPieceList;
     private String pieceKey;
     private Main main;
 
@@ -98,14 +90,6 @@ public class GameScreen extends StackPane {
         return (ImageView) background.getChildren().get(0);
     }
 
-    public int getButtonCount() {
-        return (buttons.size() == 0) ? 0 : buttons.get(0).getNumPressed();
-        /*if (buttons.size() == 0) {
-            return 0;
-        }
-        return buttons.get(0).getNumPressed();*/
-    }
-
     /*public List<PortalButton> getButtons() {
         return buttons;
     }
@@ -125,27 +109,28 @@ public class GameScreen extends StackPane {
         this.setOnMouseClicked(e -> {
             if (pieceKey != null ) {
                 if (pieceKey.equals("w")) {
-                    piece = new Wall();
-                    walls.add((Wall) piece);
+                    lastPiece = new Wall();
+                    //lastPieceList = walls;
+                    walls.add((Wall) lastPiece);
                     main.setWallList(walls);
                 } else if (pieceKey.equals("f")) {
-                    piece = new Floor();
-                    floorTiles.add((Floor) piece);
+                    lastPiece = new Floor();
+                    floorTiles.add((Floor) lastPiece);
                     main.setFloorList(floorTiles);
                 } else if (pieceKey.equals("b")) {
-                    piece = new PortalButton();
-                    buttons.add((PortalButton) piece);
+                    lastPiece = new PortalButton();
+                    buttons.add((PortalButton) lastPiece);
                     main.setButtonList(buttons);
                 } else if (pieceKey.equals("e")) {
-                    piece = new ExitPortal();
-                    exit = (ExitPortal) piece;
+                    lastPiece = new ExitPortal();
+                    exit = (ExitPortal) lastPiece;
                     main.setExitPortal(exit);
                 }
-                AnchorPane.setTopAnchor(piece, mouseY);
-                AnchorPane.setLeftAnchor(piece, mouseX);
-                piece.setPositionX(mouseX);
-                piece.setPositionY(mouseY);
-                backgroundElements.getChildren().add(piece);
+                AnchorPane.setTopAnchor(lastPiece, mouseY);
+                AnchorPane.setLeftAnchor(lastPiece, mouseX);
+                lastPiece.setPositionX(mouseX);
+                lastPiece.setPositionY(mouseY);
+                backgroundElements.getChildren().add(lastPiece);
             }
         });
     }
@@ -155,7 +140,7 @@ public class GameScreen extends StackPane {
         KeyCode k = e.getCode();
         pieceKey = k.getName().toLowerCase();
         if (pieceKey.equals("u")) {
-            //TODO: undo a piece creation? Need to know which piece was made to remove last index from the right list
+            //TODO: undo a lastPiece creation? Need to know which lastPiece was made to remove last index from the right list
         }
     }
 }

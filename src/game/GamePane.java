@@ -1,14 +1,11 @@
 package game;
 
-import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -18,7 +15,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 //import java.util.Duration;
@@ -37,12 +33,12 @@ public class GamePane extends BorderPane {
     private VBox elementBar;
     private List<ImageView> elements;
     private HBox topBar;
-    private Label timer;
+    private Label timerLabel;
     private StringProperty clock = new SimpleStringProperty("00:00:00");
     private Timeline timeline;
     private LocalTime time;
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault());
-    private Label buttonCount;
+    private Label buttonCountLabel;
     private HBox bottomBar;
     private Button restart;
     private Label statusCheck;
@@ -60,6 +56,7 @@ public class GamePane extends BorderPane {
     private boolean playerDescent;
     private double jumpHeight;
     private boolean builderMode;
+    private int buttonCount;
 
     private Main main;
 
@@ -72,10 +69,6 @@ public class GamePane extends BorderPane {
         gameScreen = new GameScreen(main);
         scroller = new ScrollPane();
         scroller.setContent(gameScreen);
-        if (!builderMode) {
-            playerCanvas = new PlayerCanvas(1017, 550, scroller);
-            playerCanvas.setMouseTransparent(true);
-        }
         scroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         setLoop();
@@ -87,22 +80,30 @@ public class GamePane extends BorderPane {
         //fill list with thumbnails
         elementBar.getChildren().addAll(elements);
         topBar = new HBox(10);
-        buttonCount = new Label("Buttons Pressed: " + gameScreen.getButtonCount() + "/5");
+        buttonCountLabel = new Label();
+        updateButtonCount();
 
         time = LocalTime.now();
-        timer = new Label();
-        timer.textProperty().bind(clock);
+        timerLabel = new Label();
+        timerLabel.textProperty().bind(clock);
         timeline = new Timeline(new KeyFrame(Duration.ZERO, e->{
             clock.set(LocalTime.now().minusNanos(time.toNanoOfDay()).format(fmt));
         }),new KeyFrame(Duration.seconds(1)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
-        topBar.getChildren().addAll(timer, buttonCount);
+        topBar.getChildren().addAll(timerLabel, buttonCountLabel);
         bottomBar = new HBox(10);
         restart = new Button("Restart");
         statusCheck = new Label("");
         bottomBar.getChildren().addAll(restart, statusCheck);
 
+        if (!builderMode) {
+            playerCanvas = new PlayerCanvas(1017, 550, scroller);
+            playerCanvas.setMouseTransparent(true);
+        } else {
+            buttonCountLabel.setVisible(false);
+            timerLabel.setVisible(false);
+        }
         setTop(topBar);
         setBottom(bottomBar);
         setLeft(elementBar);
@@ -113,6 +114,10 @@ public class GamePane extends BorderPane {
         }
         setCenter(layers);
 
+    }
+
+    private void updateButtonCount() {
+        buttonCountLabel.setText("Buttons Pressed: " + buttonCount);
     }
 
     private void setKeyEvents() {
@@ -197,6 +202,14 @@ public class GamePane extends BorderPane {
                     for (PortalButton b : main.getButtonList()) {
                         if (b.collision(playerCanvas)) {
                             hitButton = true;
+                            if (!b.pressed()) {
+                                b.press();
+                                buttonCount++;
+                                updateButtonCount();
+                            }
+                            if (buttonCount >= 3) {
+                                main.getExitPortal().open();
+                            }
                         }
                     }
                 }
