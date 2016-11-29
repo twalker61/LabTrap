@@ -7,6 +7,7 @@ import javafx.scene.layout.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by twalker61 on 11/14/16.
@@ -22,14 +23,15 @@ public class GameScreen extends StackPane {
     private double mouseX;
     private double mouseY;
     private GameElement lastPiece;
-    private List<GameElement> lastPieceList;
     private String pieceKey;
+    private Stack<String> pieceKeys;
     private boolean builderMode;
     private static Main main;
 
     public GameScreen(Main m, boolean mode) {
         builderMode = mode;
         main = m;
+        pieceKeys = new Stack<>();
         backgroundElements = new AnchorPane();
         background = new HBox();
         Floor starter = new Floor();
@@ -95,6 +97,7 @@ public class GameScreen extends StackPane {
 
         this.setOnMouseClicked(e -> {
             if (pieceKey != null ) {
+                pieceKeys.add(pieceKey);
                 if (pieceKey.equals("w")) {
                     lastPiece = new Wall();
                     //lastPieceList = walls;
@@ -125,20 +128,24 @@ public class GameScreen extends StackPane {
     public void setPieceSelector(KeyEvent e) {
         KeyCode k = e.getCode();
         if (k.getName().toLowerCase().equals("u")) {
-            if (pieceKey != null) {
-                if (pieceKey.equals("f") && floorTiles.size() > 0) {
+            String p = null;
+            if (pieceKeys.size() > 0) {
+                p = pieceKeys.pop();
+            }
+            if (p != null) {
+                if (p.equals("f") && floorTiles.size() > 0) {
                     floorTiles.remove(floorTiles.size() - 1);
                     backgroundElements.getChildren().remove(backgroundElements.getChildren().size() - 1);
                 }
-                if (pieceKey.equals("w") && walls.size() > 0) {
+                if (p.equals("w") && walls.size() > 0) {
                     walls.remove(walls.size() - 1);
                     backgroundElements.getChildren().remove(backgroundElements.getChildren().size() - 1);
                 }
-                if (pieceKey.equals("b") && buttons.size() > 0) {
+                if (p.equals("b") && buttons.size() > 0) {
                     buttons.remove(buttons.size() - 1);
                     backgroundElements.getChildren().remove(backgroundElements.getChildren().size() - 1);
                 }
-                if (pieceKey.equals("e") && exits.size() > 0) {
+                if (p.equals("e") && exits.size() > 0) {
                     exits.remove(exits.size() - 1);
                     backgroundElements.getChildren().remove(backgroundElements.getChildren().size() - 1);
                 }
