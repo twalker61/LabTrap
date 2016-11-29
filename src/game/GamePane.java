@@ -50,6 +50,7 @@ public class GamePane extends BorderPane {
     private boolean builderMode;
     private int buttonCount;
     private boolean notHere;
+    private boolean upPressed;
 
     private static Main main;
 
@@ -106,6 +107,7 @@ public class GamePane extends BorderPane {
             layers.getChildren().addAll(scroller);
         }
         setCenter(layers);
+        upPressed = true;
 
     }
 
@@ -119,7 +121,8 @@ public class GamePane extends BorderPane {
         this.setOnKeyPressed(e -> {
             KeyCode k = e.getCode();
             if (k.isArrowKey()) {
-                if (k.name().equals("UP")) {
+                if (k.name().equals("UP") && upPressed) {
+                    upPressed = false;
                     scrollLock = true;
                     jump = true;
                     if (!builderMode) {
@@ -177,6 +180,7 @@ public class GamePane extends BorderPane {
                     for (Floor f : main.getFloorList()) {
                         if (f.collision(playerCanvas)) {
                             grounded = true;
+                            upPressed = true;
                         }
                     }
                     for (Wall w : main.getWallList()) {
