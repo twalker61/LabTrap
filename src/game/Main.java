@@ -105,15 +105,7 @@ public class Main extends Application {
                 }
             }
             if (instructionPage == 4) {
-                node.getChildren().add(new ImageView(new Image(getClass
-                        ().getResource("../images/stageonescreen.png").toExternalForm())));
-                PauseTransition delay = new PauseTransition(Duration.seconds(1));
-                builder = new GamePane(this, true);
-                delay.setOnFinished(event -> {
-                    stage.setScene(new Scene(builder, 1067, 600))
-                    ;
-                });
-                delay.play();
+                switchToBuilderScreen();
             }
         });
         node.setOnMouseMoved(e -> {
@@ -159,17 +151,13 @@ public class Main extends Application {
                     next = false;
                 }
             }
-            if (instructionPage == 4) {
-                node.getChildren().add(new ImageView(new Image(getClass().getResource("../images/stageonescreen.png").toExternalForm())));
-            }
         });
     }
 
     private void setResultsMouseEvents(StackPane node) {
         node.setOnMouseClicked(e -> {
             if (hover) {
-                builder = new GamePane(this, true);
-                stage.setScene(new Scene (builder, 1067, 600));
+                switchToBuilderScreen();
             }
         });
         node.setOnMouseMoved(e -> {
@@ -192,11 +180,21 @@ public class Main extends Application {
         });
     }
 
-    public void switchToGamePlay() {
-//        play = new GamePane(this, false);
-//        stage.setScene(new Scene (play, 1067, 600));
-//        play.requestFocus();
+    public void switchToBuilderScreen() {
+        StackPane stageOne = new StackPane();
+        stageOne.getChildren().add(new ImageView(new Image(getClass
+                ().getResource("../images/stageonescreen.png").toExternalForm())));
+        stage.setScene(new Scene(stageOne, 1067, 600));
+        PauseTransition delay = new PauseTransition(Duration.seconds(1));
+        builder = new GamePane(this, true);
+        delay.setOnFinished(event -> {
+            stage.setScene(new Scene(builder, 1067, 600))
+            ;
+        });
+        delay.play();
+    }
 
+    public void switchToGamePlay() {
         StackPane stageTwo = new StackPane();
         stageTwo.getChildren().add(new ImageView(new Image(getClass
                 ().getResource("../images/stagetwoscreen.png").toExternalForm())));
