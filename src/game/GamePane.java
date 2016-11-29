@@ -34,6 +34,7 @@ public class GamePane extends BorderPane {
     private LocalTime time;
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault());
     private Label buttonCountLabel;
+    private Label portalStatus;
     private HBox bottomBar;
     private Button playButton;
     private GameScreen gameScreen;
@@ -69,6 +70,7 @@ public class GamePane extends BorderPane {
 
         topBar = new HBox(10);
         buttonCountLabel = new Label();
+        portalStatus = new Label();
         updateButtonCount();
 
         time = LocalTime.now();
@@ -79,7 +81,7 @@ public class GamePane extends BorderPane {
         }),new KeyFrame(Duration.seconds(1)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
-        topBar.getChildren().addAll(timerLabel, buttonCountLabel);
+        topBar.getChildren().addAll(timerLabel, buttonCountLabel, portalStatus);
         bottomBar = new HBox(10);
         playButton = new Button("Play Game");
         playButton.setOnAction(e -> {
@@ -93,6 +95,7 @@ public class GamePane extends BorderPane {
             playButton.setVisible(false);
         } else {
             buttonCountLabel.setVisible(false);
+            portalStatus.setVisible(false);
             timerLabel.setVisible(false);
         }
         setTop(topBar);
@@ -108,6 +111,8 @@ public class GamePane extends BorderPane {
 
     private void updateButtonCount() {
         buttonCountLabel.setText("Buttons Pressed: " + buttonCount);
+        String status = (buttonCount >= 3) ? "Unlocked" : "Locked";
+        portalStatus.setText("Portal " + status);
     }
 
     private void setKeyEvents() {
