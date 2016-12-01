@@ -274,9 +274,6 @@ public class GamePane extends BorderPane {
                         if (jump) {
                             playerCanvas.clear();
                             playerDescent = false;
-                            if (hitButton) {
-                                playerDescent = true;
-                            }
                             if (playerCanvas.getY() > jumpHeight) {
                                 playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() - increment, direction);
                             } else {
