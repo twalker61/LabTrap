@@ -199,6 +199,9 @@ public class Main extends Application {
 
     public void switchToBuilderScreen() {
         backgroundMusic.stop();
+        backgroundMusic = new MediaPlayer(new Media(getClass().getResource("../sounds/labSong.wav").toExternalForm()));
+        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+        backgroundMusic.setVolume(0.5);
         StackPane stageOne = new StackPane();
         stageOne.getChildren().add(new ImageView(new Image(getClass
                 ().getResource("../images/stageonescreen.png").toExternalForm())));
@@ -206,9 +209,6 @@ public class Main extends Application {
         PauseTransition delay = new PauseTransition(Duration.seconds(1));
         builder = new GamePane(this, true);
         delay.setOnFinished(event -> {
-            backgroundMusic = new MediaPlayer(new Media(getClass().getResource
-                    ("../sounds/labSong.wav").toExternalForm()));
-            backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
             backgroundMusic.play();
             stage.setScene(new Scene(builder, 1067, 600))
             ;
