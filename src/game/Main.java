@@ -2,19 +2,16 @@ package game;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +36,9 @@ public class Main extends Application {
     private boolean next;
     private boolean won;
     private int instructionPage;
+    private AudioClip clickSound;
+    private AudioClip resultSound;
+    private MediaPlayer backgroundMusic;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -48,6 +48,12 @@ public class Main extends Application {
         instructions = new StackPane();
         instructions.getChildren().add(new ImageView(new Image(getClass().getResource("../images/introScreen.png").toExternalForm())));
         results = new StackPane();
+
+        backgroundMusic = new MediaPlayer(new Media(getClass().getResource("../sounds/introSong.wav").toExternalForm()));
+        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+        backgroundMusic.play();
+        clickSound = new AudioClip(getClass().getResource("../sounds/click.wav")
+                .toExternalForm());
 
         setWelcomeMouseEvents(welcome);
         setInstructionsMouseEvents(instructions);
@@ -63,6 +69,7 @@ public class Main extends Application {
     private void setWelcomeMouseEvents(StackPane node) {
         node.setOnMouseClicked(e -> {
             if (hover) {
+                clickSound.play();
                 instructions = new StackPane();
                 setInstructionsMouseEvents(instructions);
                 instructions.getChildren().add(new ImageView(new Image(getClass().getResource("../images/instructionscreen1.png").toExternalForm())));
@@ -85,9 +92,11 @@ public class Main extends Application {
     private void setInstructionsMouseEvents(StackPane node) {
         node.setOnMouseClicked(e -> {
             if (instructionPage == 1 && next) {
+                clickSound.play();
                 node.getChildren().add(new ImageView(new Image(getClass().getResource("../images/instructionscreen2.png").toExternalForm())));
                 instructionPage = 2;
             } else if (instructionPage == 2) {
+                clickSound.play();
                 if (back) {
                     node.getChildren().add(new ImageView(new Image(getClass().getResource("../images/instructionscreen1.png").toExternalForm())));
                     instructionPage = 1;
@@ -97,6 +106,7 @@ public class Main extends Application {
                     instructionPage = 3;
                 }
             } else if (instructionPage == 3) {
+                clickSound.play();
                 if (back) {
                     node.getChildren().add(new ImageView(new Image(getClass().getResource("../images/instructionscreen2.png").toExternalForm())));
                     instructionPage = 2;
@@ -105,6 +115,7 @@ public class Main extends Application {
                 }
             }
             if (instructionPage == 4) {
+                clickSound.play();
                 switchToBuilderScreen();
             }
         });
@@ -181,6 +192,10 @@ public class Main extends Application {
     }
 
     public void switchToBuilderScreen() {
+        backgroundMusic.stop();
+        backgroundMusic = new MediaPlayer(new Media(getClass().getResource("../sounds/labSong.wav").toExternalForm()));
+        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+        backgroundMusic.setVolume(0.4);
         StackPane stageOne = new StackPane();
         stageOne.getChildren().add(new ImageView(new Image(getClass
                 ().getResource("../images/stageonescreen.png").toExternalForm())));
@@ -188,6 +203,7 @@ public class Main extends Application {
         PauseTransition delay = new PauseTransition(Duration.seconds(1));
         builder = new GamePane(this, true);
         delay.setOnFinished(event -> {
+            backgroundMusic.play();
             stage.setScene(new Scene(builder, 1067, 600))
             ;
         });
@@ -209,6 +225,7 @@ public class Main extends Application {
     }
 
     public void switchToResults(boolean w) {
+        backgroundMusic.setVolume(0.1);
         won = w;
         results = new StackPane();
         walls.clear();
@@ -217,8 +234,17 @@ public class Main extends Application {
         exits.clear();
         setResultsMouseEvents(results);
         if (won) {
+            resultSound = new AudioClip(getClass().getResource("../sounds/win" +
+                    ".wav").toExternalForm());
+            resultSound.play();
+            resultSound = new AudioClip(getClass().getResource("../sounds/woohoo" +
+                    ".wav").toExternalForm());
+            resultSound.play();
             results.getChildren().add(new ImageView(new Image(getClass().getResource("../images/winnerScreen.png").toExternalForm())));
         } else {
+            resultSound = new AudioClip(getClass().getResource("../sounds/lose" +
+                    ".wav").toExternalForm());
+            resultSound.play();
             results.getChildren().add(new ImageView(new Image(getClass().getResource("../images/loserScreen.png").toExternalForm())));
         }
         stage.setScene(new Scene(results, 1067, 600));

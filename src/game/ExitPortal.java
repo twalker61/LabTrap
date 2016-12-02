@@ -13,8 +13,8 @@ public class ExitPortal extends GameElement {
 
     public ExitPortal() {
         super();
-        super.setImage(new Image(getClass().getResource("../images/exitPortalClosed.png").toExternalForm()));
-        openPortal = new ImageView(new Image(getClass().getResource("../images/exitPortal1.png").toExternalForm()));
+        super.setImage(new Image(getClass().getResource("../images/closedPortal.png").toExternalForm()));
+        openPortal = new ImageView(new Image(getClass().getResource("../images/openPortal.png").toExternalForm()));
     }
 
     public void open() {
@@ -24,6 +24,12 @@ public class ExitPortal extends GameElement {
 
     public boolean isOpen() {
         return open;
+    }
+
+    @Override
+    public void setHover() {
+        super.setImage(new Image(getClass().getResource("../images/portalOutline.png").toExternalForm()));
+        hover();
     }
 
 }

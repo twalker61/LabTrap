@@ -1,8 +1,6 @@
 package game;
 
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -10,7 +8,7 @@ import javafx.scene.layout.Pane;
 /**
  * Created by twalker61 on 11/14/16.
  */
-public class GameElement extends Pane {
+public abstract class GameElement extends Pane {
 
     //make each game element a pane?
     private ImageView img;
@@ -18,11 +16,13 @@ public class GameElement extends Pane {
     private double positionY;
     private double width;
     private double height;
+    private boolean hover;
 
     public GameElement() {
     }
 
     public void setImage(Image i) {
+        this.getChildren().remove(img);
         img = new ImageView(i);
         width = i.getWidth();
         height = i.getHeight();
@@ -65,5 +65,20 @@ public class GameElement extends Pane {
     public boolean collision(PlayerCanvas g) {
         return this.getBoundary().intersects(g.getBoundary());
     }
+
+    public abstract void setHover();
+
+    public void hover() {
+        hover = true;
+    }
+
+    public boolean hovering() {
+        return hover;
+    }
+
+    /*@Override
+    public String toString() {
+        return img.getImage().toString();
+    }*/
 
 }
