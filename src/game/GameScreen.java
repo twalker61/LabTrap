@@ -6,8 +6,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 
-import javax.sound.sampled.Port;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
