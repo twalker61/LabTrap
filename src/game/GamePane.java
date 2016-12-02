@@ -57,6 +57,7 @@ public class GamePane extends BorderPane {
     private int numChews;
     private AudioClip buttonPressedSound;
     private AudioClip jumpSound;
+    private AudioClip biteSound;
 
     private static Main main;
 
@@ -68,6 +69,7 @@ public class GamePane extends BorderPane {
         buttonPressedSound = new AudioClip(getClass().getResource("../sounds/buttonPressed.wav").toExternalForm());
         jumpSound = new AudioClip(getClass().getResource("../sounds/jump.wav").toExternalForm());
         jumpSound.setVolume(40.0);
+        biteSound = new AudioClip(getClass().getResource("../sounds/biteSound.wav").toExternalForm());
 
         layers = new StackPane();
         gameScreen = new GameScreen(main, builderMode);
@@ -158,10 +160,12 @@ public class GamePane extends BorderPane {
                 }
             } else if (k.name().equalsIgnoreCase("c")) {
                 if (numChews < 3) {
+                    biteSound.play();
                     floorChew = true;
                 }
             } else if (k.name().equalsIgnoreCase("g")) {
                 if (numChews < 3) {
+                    biteSound.play();
                     wallChew = true;
                 }
             } else {
