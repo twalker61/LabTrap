@@ -14,6 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -42,6 +44,7 @@ public class Main extends Application {
     private boolean won;
     private int instructionPage;
     private AudioClip clickSound;
+    private MediaPlayer backgroundMusic;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -52,6 +55,9 @@ public class Main extends Application {
         instructions.getChildren().add(new ImageView(new Image(getClass().getResource("../images/introScreen.png").toExternalForm())));
         results = new StackPane();
 
+        backgroundMusic = new MediaPlayer(new Media(getClass().getResource("../sounds/introSong.wav").toExternalForm()));
+        backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+        backgroundMusic.play();
         clickSound = new AudioClip(getClass().getResource("../sounds/click.wav")
                 .toExternalForm());
 
@@ -192,6 +198,7 @@ public class Main extends Application {
     }
 
     public void switchToBuilderScreen() {
+        backgroundMusic.stop();
         StackPane stageOne = new StackPane();
         stageOne.getChildren().add(new ImageView(new Image(getClass
                 ().getResource("../images/stageonescreen.png").toExternalForm())));
@@ -199,6 +206,10 @@ public class Main extends Application {
         PauseTransition delay = new PauseTransition(Duration.seconds(1));
         builder = new GamePane(this, true);
         delay.setOnFinished(event -> {
+            backgroundMusic = new MediaPlayer(new Media(getClass().getResource
+                    ("../sounds/labSong.wav").toExternalForm()));
+            backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
+            backgroundMusic.play();
             stage.setScene(new Scene(builder, 1067, 600))
             ;
         });
