@@ -21,6 +21,7 @@ import javafx.util.Duration;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  * Created by twalker61 on 11/14/16.
@@ -30,12 +31,13 @@ public class GamePane extends BorderPane {
     private StackPane layers;
     private HBox topBar;
     private Label timerLabel;
-    private StringProperty clock = new SimpleStringProperty("00:00:00");
+    private StringProperty clock = new SimpleStringProperty("Time: 00:00:00 | ");
     private Timeline timeline;
     private LocalTime time;
     private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern("HH:mm:ss").withZone(ZoneId.systemDefault());
     private Label buttonCountLabel;
     private Label portalStatus;
+    private Label numChewsLabel;
     private HBox bottomBar;
     private Button playButton;
     private GameScreen gameScreen;
@@ -52,6 +54,9 @@ public class GamePane extends BorderPane {
     private int buttonCount;
     private boolean notHere;
     private boolean upPressed;
+    private boolean floorChew;
+    private boolean wallChew;
+    private int numChews;
     private AudioClip buttonPressedSound;
 
     private static Main main;
@@ -79,16 +84,18 @@ public class GamePane extends BorderPane {
         buttonCountLabel = new Label();
         portalStatus = new Label();
         updateButtonCount();
+        numChewsLabel = new Label();
+        updateNumChews();
 
         time = LocalTime.now();
         timerLabel = new Label();
         timerLabel.textProperty().bind(clock);
         timeline = new Timeline(new KeyFrame(Duration.ZERO, e->{
-            clock.set(LocalTime.now().minusNanos(time.toNanoOfDay()).format(fmt));
+            clock.set("Time: " + LocalTime.now().minusNanos(time.toNanoOfDay()).format(fmt) + " | ");
         }),new KeyFrame(Duration.seconds(1)));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
-        topBar.getChildren().addAll(timerLabel, buttonCountLabel, portalStatus);
+        topBar.getChildren().addAll(timerLabel, buttonCountLabel, portalStatus, numChewsLabel);
         bottomBar = new HBox(10);
         playButton = new Button("Play Game");
         playButton.setOnAction(e -> {
@@ -104,6 +111,7 @@ public class GamePane extends BorderPane {
             buttonCountLabel.setVisible(false);
             portalStatus.setVisible(false);
             timerLabel.setVisible(false);
+            numChewsLabel.setVisible(false);
         }
         setTop(topBar);
         setBottom(bottomBar);
@@ -118,9 +126,13 @@ public class GamePane extends BorderPane {
     }
 
     private void updateButtonCount() {
-        buttonCountLabel.setText("Buttons Pressed: " + buttonCount);
+        buttonCountLabel.setText("Buttons Pressed: " + buttonCount + " | ");
         String status = (buttonCount >= 3) ? "Unlocked" : "Locked";
-        portalStatus.setText("Portal " + status);
+        portalStatus.setText("Portal " + status + " | ");
+    }
+
+    private void updateNumChews() {
+        numChewsLabel.setText("Chews used: " + numChews + " Chews remaining: " + (3 - numChews));
     }
 
     private void setKeyEvents() {
@@ -144,6 +156,14 @@ public class GamePane extends BorderPane {
                 if (k.name().equals("RIGHT")) {
                     moveRight = true;
                 }
+            } else if (k.name().equalsIgnoreCase("c")) {
+                if (numChews < 3) {
+                    floorChew = true;
+                }
+            } else if (k.name().equalsIgnoreCase("g")) {
+                if (numChews < 3) {
+                    wallChew = true;
+                }
             } else {
                 gameScreen.setPieceSelector(e);
             }
@@ -166,6 +186,12 @@ public class GamePane extends BorderPane {
                 }
             }
         });
+
+        this.setOnMouseMoved(e -> {
+            if (builderMode) {
+                gameScreen.setHoverImage();
+            }
+        });
     }
 
     private void setLoop() {
@@ -175,32 +201,37 @@ public class GamePane extends BorderPane {
             double scroll = .5;
             double increment;
             double vVal = scroller.getVvalue();
+            List<Floor> floorTiles = main.getFloorList();
+            List<Wall> walls = main.getWallList();
+            Floor currentFloor;
+            Wall currentWall;
+
             @Override
             public void handle(long time) {
                 boolean grounded = false;
                 boolean rightBlocked = false;
                 boolean leftBlocked = false;
-                boolean hitButton = false;
                 if (!builderMode) {
                     increment = playerCanvas.getJumpMax() /20;
-                    for (Floor f : main.getFloorList()) {
+                    for (Floor f : floorTiles) {
                         if (f.collision(playerCanvas)) {
                             grounded = true;
                             upPressed = true;
+                            currentFloor = f;
                         }
                     }
-                    for (Wall w : main.getWallList()) {
+                    for (Wall w : walls) {
                         if (w.collision(playerCanvas)) {
                             if (w.getCenterX() > playerCanvas.getCenterX()) {
                                 rightBlocked = true;
                             } else {
                                 leftBlocked = true;
                             }
+                            currentWall = w;
                         }
                     }
                     for (PortalButton b : main.getButtonList()) {
                         if (b.collision(playerCanvas)) {
-                            hitButton = true;
                             if (!b.pressed()) {
                                 buttonPressedSound.play();
                                 b.press();
@@ -292,6 +323,26 @@ public class GamePane extends BorderPane {
 
                         if (playerDescent) {
                             playerCanvas.draw(playerCanvas.getX(), playerCanvas.getY() + increment, direction);
+                        }
+                        if (floorChew) {
+                            currentFloor.chew();
+                            floorChew = false;
+                            if (currentFloor.isChewed()) {
+                                floorTiles.remove(currentFloor);
+                                gameScreen.updatePiece(currentFloor);
+                                numChews++;
+                                updateNumChews();
+                            }
+                        }
+                        if (wallChew) {
+                            currentWall.chew();
+                            wallChew = false;
+                            if (currentWall.isChewed()) {
+                                walls.remove(currentWall);
+                                gameScreen.updatePiece(currentWall);
+                                numChews++;
+                                updateNumChews();
+                            }
                         }
                     }
 

@@ -22,4 +22,10 @@ public class PortalButton extends GameElement {
     public boolean pressed() {
         return pressed;
     }
+
+    @Override
+    public void setHover() {
+        super.setImage(new Image(getClass().getResource("../images/buttonOutline.png").toExternalForm()));
+        hover();
+    }
 }

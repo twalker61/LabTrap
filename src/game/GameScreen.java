@@ -6,6 +6,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 
+import javax.sound.sampled.Port;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -24,6 +25,7 @@ public class GameScreen extends StackPane {
     private double mouseX;
     private double mouseY;
     private GameElement lastPiece;
+    private GameElement hoverImage;
     private String pieceKey;
     private Stack<String> pieceKeys;
     private boolean builderMode;
@@ -92,6 +94,59 @@ public class GameScreen extends StackPane {
         }
     }
 
+    private GameElement selectPiece(boolean clicked, String key) {
+        if (key.equals("w")) {
+            Wall w = new Wall();
+            if (clicked) {
+                main.addWall(w);
+                walls = main.getWallList();
+            }
+           return w;
+        }
+        if (key.equals("f")) {
+            Floor f = new Floor();
+            if (clicked) {
+                main.addFloor(f);
+                floorTiles = main.getFloorList();
+            }
+            return f;
+        }
+        if (key.equals("b")) {
+            PortalButton b = new PortalButton();
+            if (clicked) {
+                main.addButton(b);
+                buttons = main.getButtonList();
+            }
+            return b;
+        }
+        if (key.equals("e")) {
+            ExitPortal e = new ExitPortal();
+            if (clicked) {
+                main.addExit(e);
+                exits = main.getExitPortals();
+            }
+            return e;
+        }
+        return null;
+    }
+
+    public void setHoverImage() {
+        if (pieceKey != null) {
+            hoverImage = selectPiece(false, pieceKey);
+        }
+        if (hoverImage != null) {
+            AnchorPane.setTopAnchor(hoverImage, mouseY);
+            AnchorPane.setLeftAnchor(hoverImage, mouseX);
+            hoverImage.setPositionX(mouseX);
+            hoverImage.setPositionY(mouseY);
+            hoverImage.setHover();
+            if (((GameElement)backgroundElements.getChildren().get(backgroundElements.getChildren().size() - 1)).hovering()) {
+                backgroundElements.getChildren().remove(backgroundElements.getChildren().size() - 1);
+            }
+            backgroundElements.getChildren().add(hoverImage);
+        }
+    }
+
     private void setMouseListener() {
         this.setOnMouseMoved(e -> {
             mouseX = e.getX();
@@ -101,32 +156,26 @@ public class GameScreen extends StackPane {
         this.setOnMouseClicked(e -> {
             if (pieceKey != null ) {
                 buildSound.play();
-                pieceKeys.add(pieceKey);
-                if (pieceKey.equals("w")) {
-                    lastPiece = new Wall();
-                    //lastPieceList = walls;
-                    main.addWall((Wall) lastPiece);
-                    walls = main.getWallList();
-                } else if (pieceKey.equals("f")) {
-                    lastPiece = new Floor();
-                    main.addFloor((Floor) lastPiece);
-                    floorTiles = main.getFloorList();
-                } else if (pieceKey.equals("b")) {
-                    lastPiece = new PortalButton();
-                    main.addButton((PortalButton) lastPiece);
-                    buttons = main.getButtonList();
-                } else if (pieceKey.equals("e")) {
-                    lastPiece = new ExitPortal();
-                    main.addExit((ExitPortal) lastPiece);
-                    exits = main.getExitPortals();
+                lastPiece = selectPiece(true, pieceKey);
+                if (lastPiece != null) {
+                    pieceKeys.add(pieceKey);
+                    AnchorPane.setTopAnchor(lastPiece, mouseY);
+                    AnchorPane.setLeftAnchor(lastPiece, mouseX);
+                    lastPiece.setPositionX(mouseX);
+                    lastPiece.setPositionY(mouseY);
+                    backgroundElements.getChildren().remove(backgroundElements.getChildren().size() - 1);
+                    backgroundElements.getChildren().add(lastPiece);
                 }
-                AnchorPane.setTopAnchor(lastPiece, mouseY);
-                AnchorPane.setLeftAnchor(lastPiece, mouseX);
-                lastPiece.setPositionX(mouseX);
-                lastPiece.setPositionY(mouseY);
-                backgroundElements.getChildren().add(lastPiece);
             }
         });
+    }
+
+    public void updatePiece(GameElement g) {
+        backgroundElements.getChildren().remove(g);
+        AnchorPane.setTopAnchor(g, g.getPositionY());
+        AnchorPane.setLeftAnchor(g, g.getPositionX());
+        backgroundElements.getChildren().add(g);
+
     }
 
     public void setPieceSelector(KeyEvent e) {
@@ -159,3 +208,7 @@ public class GameScreen extends StackPane {
         }
     }
 }
+
+//Better design would have been to have a single background elements list that I add new pieces to, and in the
+//gamepane, I would loop through and react to each if collision detected, and that reaction would determine all the logic
+//like grounded or buttonpressed or piece chewed and what not.
