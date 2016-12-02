@@ -15,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.util.Duration;
 
 import java.time.LocalTime;
@@ -51,6 +52,7 @@ public class GamePane extends BorderPane {
     private int buttonCount;
     private boolean notHere;
     private boolean upPressed;
+    private AudioClip buttonPressedSound;
 
     private static Main main;
 
@@ -58,6 +60,10 @@ public class GamePane extends BorderPane {
         main = m;
         builderMode = mode;
         playerDescent = true;
+
+        buttonPressedSound = new AudioClip(getClass().getResource
+                ("../sounds/buttonPressed" +
+                        ".wav").toExternalForm());
 
         layers = new StackPane();
         gameScreen = new GameScreen(main, builderMode);
@@ -196,6 +202,7 @@ public class GamePane extends BorderPane {
                         if (b.collision(playerCanvas)) {
                             hitButton = true;
                             if (!b.pressed()) {
+                                buttonPressedSound.play();
                                 b.press();
                                 buttonCount++;
                                 updateButtonCount();

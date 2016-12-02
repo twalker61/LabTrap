@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.media.AudioClip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class GameScreen extends StackPane {
     private Stack<String> pieceKeys;
     private boolean builderMode;
     private static Main main;
+    private AudioClip buildSound;
 
     public GameScreen(Main m, boolean mode) {
         builderMode = mode;
@@ -45,6 +47,7 @@ public class GameScreen extends StackPane {
         background.getChildren().add(img);
         backgroundElements.setPrefHeight(550);
         backgroundElements.setMaxHeight(550);
+        buildSound = new AudioClip(getClass().getResource("../sounds/buildSound.wav").toExternalForm());
 
         this.getChildren().addAll(background, backgroundElements);
 
@@ -97,6 +100,7 @@ public class GameScreen extends StackPane {
 
         this.setOnMouseClicked(e -> {
             if (pieceKey != null ) {
+                buildSound.play();
                 pieceKeys.add(pieceKey);
                 if (pieceKey.equals("w")) {
                     lastPiece = new Wall();
