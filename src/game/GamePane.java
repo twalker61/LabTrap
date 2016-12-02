@@ -53,6 +53,7 @@ public class GamePane extends BorderPane {
     private boolean notHere;
     private boolean upPressed;
     private AudioClip buttonPressedSound;
+    private AudioClip jumpSound;
 
     private static Main main;
 
@@ -61,9 +62,9 @@ public class GamePane extends BorderPane {
         builderMode = mode;
         playerDescent = true;
 
-        buttonPressedSound = new AudioClip(getClass().getResource
-                ("../sounds/buttonPressed" +
-                        ".wav").toExternalForm());
+        buttonPressedSound = new AudioClip(getClass().getResource("../sounds/buttonPressed.wav").toExternalForm());
+        jumpSound = new AudioClip(getClass().getResource("../sounds/jump.wav").toExternalForm());
+        jumpSound.setVolume(40.0);
 
         layers = new StackPane();
         gameScreen = new GameScreen(main, builderMode);
@@ -128,6 +129,7 @@ public class GamePane extends BorderPane {
             KeyCode k = e.getCode();
             if (k.isArrowKey()) {
                 if (k.name().equals("UP") && upPressed) {
+                    jumpSound.play();
                     upPressed = false;
                     scrollLock = true;
                     jump = true;
