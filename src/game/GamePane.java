@@ -331,6 +331,7 @@ public class GamePane extends BorderPane {
                                 floorTiles.remove(currentFloor);
                                 gameScreen.updatePiece(currentFloor);
                                 numChews++;
+                                System.out.println(numChews);
                                 updateNumChews();
                             }
                         }
@@ -341,6 +342,7 @@ public class GamePane extends BorderPane {
                                 walls.remove(currentWall);
                                 gameScreen.updatePiece(currentWall);
                                 numChews++;
+                                System.out.println(numChews);
                                 updateNumChews();
                             }
                         }

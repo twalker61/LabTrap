@@ -24,7 +24,7 @@ public class Wall extends GameElement {
     }
 
     public boolean isChewed() {
-        return chewed;
+        return chewed && chews == 5;
     }
 
     @Override
