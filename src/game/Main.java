@@ -37,6 +37,7 @@ public class Main extends Application {
     private boolean won;
     private int instructionPage;
     private AudioClip clickSound;
+    private AudioClip resultSound;
     private MediaPlayer backgroundMusic;
 
     @Override
@@ -194,7 +195,7 @@ public class Main extends Application {
         backgroundMusic.stop();
         backgroundMusic = new MediaPlayer(new Media(getClass().getResource("../sounds/labSong.wav").toExternalForm()));
         backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE);
-        backgroundMusic.setVolume(0.5);
+        backgroundMusic.setVolume(0.4);
         StackPane stageOne = new StackPane();
         stageOne.getChildren().add(new ImageView(new Image(getClass
                 ().getResource("../images/stageonescreen.png").toExternalForm())));
@@ -224,6 +225,7 @@ public class Main extends Application {
     }
 
     public void switchToResults(boolean w) {
+        backgroundMusic.setVolume(0.1);
         won = w;
         results = new StackPane();
         walls.clear();
@@ -232,8 +234,17 @@ public class Main extends Application {
         exits.clear();
         setResultsMouseEvents(results);
         if (won) {
+            resultSound = new AudioClip(getClass().getResource("../sounds/win" +
+                    ".wav").toExternalForm());
+            resultSound.play();
+            resultSound = new AudioClip(getClass().getResource("../sounds/woohoo" +
+                    ".wav").toExternalForm());
+            resultSound.play();
             results.getChildren().add(new ImageView(new Image(getClass().getResource("../images/winnerScreen.png").toExternalForm())));
         } else {
+            resultSound = new AudioClip(getClass().getResource("../sounds/lose" +
+                    ".wav").toExternalForm());
+            resultSound.play();
             results.getChildren().add(new ImageView(new Image(getClass().getResource("../images/loserScreen.png").toExternalForm())));
         }
         stage.setScene(new Scene(results, 1067, 600));
